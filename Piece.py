@@ -4,7 +4,7 @@
 # TODO: add checking if check after moving suggested move later
 
 # General chess piece
-from enums import Player
+from enums import Player, SquareBoard
 
 
 class Piece:
@@ -97,7 +97,7 @@ class Rook(Piece):
 
         # Right of the Rook
         self._breaking_point = False
-        while self.get_col_number() + self._right < 8 and not self._breaking_point:
+        while self.get_col_number() + self._right < SquareBoard.DIMENSIONS and not self._breaking_point:
             # when the square to the left is empty
             if game_state.get_piece(self.get_row_number(), self.get_col_number() + self._right) is Player.EMPTY:
                 _peaceful_moves.append((self.get_row_number(), self.get_col_number() + self._right))
@@ -112,7 +112,7 @@ class Rook(Piece):
 
         # Below the Rook
         self._breaking_point = False
-        while self.get_row_number() + self._down < 8 and not self._breaking_point:
+        while self.get_row_number() + self._down < SquareBoard.DIMENSIONS and not self._breaking_point:
             # when the square to the left is empty
             if game_state.get_piece(self.get_row_number() + self._down, self.get_col_number()) is Player.EMPTY:
                 _peaceful_moves.append((self.get_row_number() + self._down, self.get_col_number()))
@@ -149,7 +149,7 @@ class Knight(Piece):
         row_change = [-2, -2, -1, -1, +1, +1, +2, +2]
         col_change = [-1, +1, -2, +2, -2, +2, +1, -1]
 
-        for i in range(0, 8):
+        for i in range(0, SquareBoard.DIMENSIONS):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)
@@ -163,7 +163,7 @@ class Knight(Piece):
         row_change = [-2, -2, -1, -1, +1, +1, +2, +2]
         col_change = [-1, +1, -2, +2, -2, +2, +1, -1]
 
-        for i in range(0, 8):
+        for i in range(0, SquareBoard.DIMENSIONS):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)
@@ -173,29 +173,6 @@ class Knight(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        # _moves = []# self._moves.clear()
-        # current_square_row = self.row_number  # The integer row value of the starting square
-        # current_square_col = self.col_number  # The integer col value of the starting square
-        #
-        # row_change = [-2, -2, -1, -1, +1, +1, +2, +2]
-        # col_change = [-1, +1, -2, +2, -2, +2, +1, -1]
-        #
-        # for i in range(0, 8):
-        #     new_row = current_square_row + row_change[i]
-        #     new_col = current_square_col + col_change[i]
-        #     evaluating_square = board.get_piece(new_row, new_col)
-        #     # when the square with new_row and new_col is empty
-        #     if evaluating_square == Player.EMPTY:
-        #         _moves.append((new_row, new_col))
-        #     # when the square with new_row and new_col contains a valid piece
-        #     if board.is_valid_piece(new_row, new_col):
-        #         # when the knight is white and the piece near the king is black
-        #         if self.is_player(Player.PLAYER_1) and evaluating_square.is_player(Player.PLAYER_2):
-        #             _moves.append((new_row, new_col))
-        #         # when the knight is black and the piece near the king is white
-        #         elif self.is_player(Player.PLAYER_2) and evaluating_square.is_player(Player.PLAYER_1):
-        #             _moves.append((new_row, new_col))
-        # return _moves
         return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
 # Bishop
 class Bishop(Piece):
@@ -240,7 +217,7 @@ class Bishop(Piece):
         self._down = 1
         self._left = 1
         self._right = 1
-        while self.get_col_number() + self._right < 8 and self.get_row_number() - self._up >= 0 and not self._breaking_point:
+        while self.get_col_number() + self._right < SquareBoard.DIMENSIONS and self.get_row_number() - self._up >= 0 and not self._breaking_point:
             # when the square is empty
             if game_state.get_piece(self.get_row_number() - self._up, self.get_col_number() + self._right) is Player.EMPTY:
                 _peaceful_moves.append((self.get_row_number() - self._up, self.get_col_number() + self._right))
@@ -260,7 +237,7 @@ class Bishop(Piece):
         self._down = 1
         self._left = 1
         self._right = 1
-        while self.get_col_number() - self._left >= 0 and self.get_row_number() + self._down < 8 and not self._breaking_point:
+        while self.get_col_number() - self._left >= 0 and self.get_row_number() + self._down < SquareBoard.DIMENSIONS and not self._breaking_point:
             # when the square is empty
             if game_state.get_piece(self.get_row_number() + self._down, self.get_col_number() - self._left) is Player.EMPTY:
                 _peaceful_moves.append((self.get_row_number() + self._down, self.get_col_number() - self._left))
@@ -280,7 +257,7 @@ class Bishop(Piece):
         self._down = 1
         self._left = 1
         self._right = 1
-        while self.get_col_number() + self._right < 8 and self.get_row_number() + self._down < 8 and not self._breaking_point:
+        while self.get_col_number() + self._right < SquareBoard.DIMENSIONS and self.get_row_number() + self._down < SquareBoard.DIMENSIONS and not self._breaking_point:
             # when the square is empty
             if game_state.get_piece(self.get_row_number() + self._down, self.get_col_number() + self._right) is Player.EMPTY:
                 _peaceful_moves.append((self.get_row_number() + self._down, self.get_col_number() + self._right))
@@ -427,7 +404,7 @@ class King(Piece):
         row_change = [-1, +0, +1, -1, +1, -1, +0, +1]
         col_change = [-1, -1, -1, +0, +0, +1, +1, +1]
 
-        for i in range(0, 8):
+        for i in range(0, SquareBoard.DIMENSIONS):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)
@@ -446,7 +423,7 @@ class King(Piece):
         row_change = [-1, +0, +1, -1, +1, -1, +0, +1]
         col_change = [-1, -1, -1, +0, +0, +1, +1, +1]
 
-        for i in range(0, 8):
+        for i in range(0, SquareBoard.DIMENSIONS):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)
@@ -473,7 +450,7 @@ class King(Piece):
         #
         # row_change = [-1, +0, +1, -1, +1, -1, +0, +1]
         # col_change = [-1, -1, -1, +0, +0, +1, +1, +1]
-        # for i in range(0, 8):
+        # for i in range(0, SquareBoard.DIMENSIONS):
         #     new_row = current_square_row + row_change[i]
         #     new_col = current_square_col + col_change[i]
         #     evaluating_square = game_state.get_piece(new_row, new_col)

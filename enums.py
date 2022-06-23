@@ -8,6 +8,6 @@ class Player:
 
 
 class SquareBoard: # assume square for now
-    DIMENSIONS = 8
+    DIMENSIONS = 16
     WIDTH = 512
     HEIGHT = 512
