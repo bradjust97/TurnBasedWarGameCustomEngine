@@ -9,11 +9,12 @@ import chess_engine
 import pygame as py
 
 import ai_engine
-from enums import Player
+from enums import Player, SquareBoard
 
 """Variables"""
-WIDTH = HEIGHT = 512  # width and height of the chess board
-DIMENSION = 8  # the dimensions of the chess board
+WIDTH = SquareBoard.WIDTH  # width and height of the chess board
+HEIGHT = SquareBoard.HEIGHT
+DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the chess board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations
 IMAGES = {}  # images for the chess pieces
@@ -27,7 +28,6 @@ def load_images():
     for p in Player.PIECES:
         IMAGES[p] = py.transform.scale(py.image.load("images/" + p + ".png"), (SQ_SIZE, SQ_SIZE))
     for u in Player.UNITS:
-        print(u)
         IMAGES[u] = py.transform.scale(py.image.load("images/advancedWars/" + u + ".png"), (SQ_SIZE, SQ_SIZE))
 
 
@@ -177,10 +177,13 @@ def main():
                 elif e.key == py.K_u:
                     game_state.undo_move()
                     print(len(game_state.move_log))
+                elif e.key == py.K_p:
+                    print(game_state.board)
 
         draw_game_state(screen, game_state, valid_moves, square_selected)
 
-        endgame = game_state.checkmate_stalemate_checker()
+        # endgame = game_state.checkmate_stalemate_checker()
+        endgame = game_state.isDeadKing()
         if endgame == 0:
             game_over = True
             draw_text(screen, "Black wins.")
@@ -193,74 +196,6 @@ def main():
 
         clock.tick(MAX_FPS)
         py.display.flip()
-
-    # elif human_player is 'w':
-    #     ai = ai_engine.chess_ai()
-    #     game_state = chess_engine.game_state()
-    #     valid_moves = []
-    #     while running:
-    #         for e in py.event.get():
-    #             if e.type == py.QUIT:
-    #                 running = False
-    #             elif e.type == py.MOUSEBUTTONDOWN:
-    #                 if not game_over:
-    #                     location = py.mouse.get_pos()
-    #                     col = location[0] // SQ_SIZE
-    #                     row = location[1] // SQ_SIZE
-    #                     if square_selected == (row, col):
-    #                         square_selected = ()
-    #                         player_clicks = []
-    #                     else:
-    #                         square_selected = (row, col)
-    #                         player_clicks.append(square_selected)
-    #                     if len(player_clicks) == 2:
-    #                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
-    #                             square_selected = ()
-    #                             player_clicks = []
-    #                             valid_moves = []
-    #                         else:
-    #                             game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
-    #                                                   (player_clicks[1][0], player_clicks[1][1]), False)
-    #                             square_selected = ()
-    #                             player_clicks = []
-    #                             valid_moves = []
-    #
-    #                             ai_move = ai.minimax(game_state, 3, -100000, 100000, True, Player.PLAYER_2)
-    #                             game_state.move_piece(ai_move[0], ai_move[1], True)
-    #                     else:
-    #                         valid_moves = game_state.get_valid_moves((row, col))
-    #                         if valid_moves is None:
-    #                             valid_moves = []
-    #             elif e.type == py.KEYDOWN:
-    #                 if e.key == py.K_r:
-    #                     game_over = False
-    #                     game_state = chess_engine.game_state()
-    #                     valid_moves = []
-    #                     square_selected = ()
-    #                     player_clicks = []
-    #                     valid_moves = []
-    #                 elif e.key == py.K_u:
-    #                     game_state.undo_move()
-    #                     print(len(game_state.move_log))
-    #         draw_game_state(screen, game_state, valid_moves, square_selected)
-    #
-    #         endgame = game_state.checkmate_stalemate_checker()
-    #         if endgame == 0:
-    #             game_over = True
-    #             draw_text(screen, "Black wins.")
-    #         elif endgame == 1:
-    #             game_over = True
-    #             draw_text(screen, "White wins.")
-    #         elif endgame == 2:
-    #             game_over = True
-    #             draw_text(screen, "Stalemate.")
-    #
-    #         clock.tick(MAX_FPS)
-    #         py.display.flip()
-    #
-    # elif human_player is 'b':
-    #     pass
-
 
 def draw_text(screen, text):
     font = py.font.SysFont("Helvitca", 32, True, False)

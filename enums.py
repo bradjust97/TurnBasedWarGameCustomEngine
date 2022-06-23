@@ -7,6 +7,7 @@ class Player:
     UNITS = ['white_recon', 'black_recon', 'black_tank', 'white_infantry', 'black_infantry', 'white_king', 'white_queen','black_king', 'black_queen', 'white_tank', 'black_tank', 'white_artillery', 'black_artillery']
 
 
-
-    # PIECES = ['white_r', 'white_n', 'white_b', 'white_q', 'white_k', 'white_p',
-    #           'black_r', 'black_n', 'black_b', 'black_q', 'black_k', 'black_p']
+class SquareBoard: # assume square for now
+    DIMENSIONS = 8
+    WIDTH = 512
+    HEIGHT = 512
