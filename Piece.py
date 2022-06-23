@@ -421,7 +421,10 @@ class King(Piece):
     def get_valid_peaceful_moves(self, game_state):
         _moves = []
         row_change = [-1, +0, +1, -1, +1, -1, +0, +1]
-        col_change = [-1, -1, -1, +0, +0, +1, +1, +1]
+        col_change = [-1, -1, -1, +0, +0, +1, +1, +1] #BJUSTICE THIS FAILS AFTER MOVE IS DONE AND ITS TRYING TO CALC NEXT POSSIBLE MOVES. THIS IS BECAUSE THE 
+                                                      # ORIGINAL RETARD WHO CODED THIS HARD CODED POSSIBLE MOVES FOR KING AND KNIGHT. SQUAREBOARD DIMENSIONS DID
+                                                      # NOT REPLACE THE BOARD DIMENSIONS BUT THE AMOUNT OF MOVES THE KING CAN DO. LOL. SQ DIMS IS 16, BUT THE ROWCHANGE
+                                                      # ARRAY IS OF LEN 8
 
         for i in range(0, SquareBoard.DIMENSIONS):
             new_row = self.get_row_number() + row_change[i]

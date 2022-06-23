@@ -91,25 +91,26 @@ def highlight_square(screen, game_state, valid_moves, square_selected):
 def main():
     # Check for the number of players and the color of the AI
     human_player = ""
-    while True:
-        try:
-            number_of_players = input("How many players (1 or 2)?\n")
-            if int(number_of_players) == 1:
-                number_of_players = 1
-                while True:
-                    human_player = input("What color do you want to play (w or b)?\n")
-                    if human_player is "w" or human_player is "b":
-                        break
-                    else:
-                        print("Enter w or b.\n")
-                break
-            elif int(number_of_players) == 2:
-                number_of_players = 2
-                break
-            else:
-                print("Enter 1 or 2.\n")
-        except ValueError:
-            print("Enter 1 or 2.")
+    # while True:
+    #     try:
+    #         number_of_players = input("How many players (1 or 2)?\n")
+    #         if int(number_of_players) == 1:
+    #             number_of_players = 1
+    #             while True:
+    #                 human_player = input("What color do you want to play (w or b)?\n")
+    #                 if human_player is "w" or human_player is "b":
+    #                     break
+    #                 else:
+    #                     print("Enter w or b.\n")
+    #             break
+    #         elif int(number_of_players) == 2:
+    #             number_of_players = 2
+    #             break
+    #         else:
+    #             print("Enter 1 or 2.\n")
+    #     except ValueError:
+    #         print("Enter 1 or 2.")
+    # number_of_players = 2
 
     py.init()
     screen = py.display.set_mode((WIDTH, HEIGHT))

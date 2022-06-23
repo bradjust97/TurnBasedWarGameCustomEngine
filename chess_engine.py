@@ -193,14 +193,10 @@ class game_state:
 
             if ending_square in valid_moves:
                 moved_to_piece = self.get_piece(next_square_row, next_square_col)
-                print("movedTo")
-                print(moved_to_piece)
                 if moved_to_piece != -9:
                     if moved_to_piece.get_name() == "king" and self.whose_turn():
-                        print("abc")
                         self.black_is_dead = True
                     elif moved_to_piece.get_name() == "king" and not self.whose_turn():
-                        print("123")
                         self.white_is_dead = True
                 if moving_piece.get_name() is "k":
                     if moving_piece.is_player(Player.PLAYER_1):
