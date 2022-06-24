@@ -1,15 +1,19 @@
 # King
 from Piece import Piece
-from enums import Player, SquareBoard
+from enums import KingEnums, Player, SquareBoard
 
 
 class King(Piece):
+    def __init__(self, row_number, col_number, player):
+        name = KingEnums.NAME
+        super().__init__(name, row_number, col_number, player)
+
     def get_valid_piece_takes(self, game_state):
         _moves = []
         row_change = [-1, +0, +1, -1, +1, -1, +0, +1]
         col_change = [-1, -1, -1, +0, +0, +1, +1, +1]
 
-        for i in range(0, SquareBoard.DIMENSIONS):
+        for i in range(0, len(row_change)):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)
@@ -31,7 +35,7 @@ class King(Piece):
                                                       # NOT REPLACE THE BOARD DIMENSIONS BUT THE AMOUNT OF MOVES THE KING CAN DO. LOL. SQ DIMS IS 16, BUT THE ROWCHANGE
                                                       # ARRAY IS OF LEN 8
 
-        for i in range(0, SquareBoard.DIMENSIONS):
+        for i in range(0, len(row_change)):
             new_row = self.get_row_number() + row_change[i]
             new_col = self.get_col_number() + col_change[i]
             evaluating_square = game_state.get_piece(new_row, new_col)

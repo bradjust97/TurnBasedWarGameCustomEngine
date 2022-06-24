@@ -165,6 +165,7 @@ def main():
                                 game_state.move_piece(ai_move[0], ai_move[1], True)
                     else:
                         valid_moves = game_state.get_valid_moves((row, col))
+                        print(valid_moves)
                         if valid_moves is None:
                             valid_moves = []
             elif e.type == py.KEYDOWN:
@@ -179,7 +180,7 @@ def main():
                     game_state.undo_move()
                     print(len(game_state.move_log))
                 elif e.key == py.K_p:
-                    print(game_state.board)
+                    print(game_state.whose_turn)
 
         draw_game_state(screen, game_state, valid_moves, square_selected)
 

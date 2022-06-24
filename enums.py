@@ -11,3 +11,27 @@ class SquareBoard: # assume square for now
     DIMENSIONS = 16
     WIDTH = 512
     HEIGHT = 512
+
+class KingEnums:
+    MOVEMENT = 1
+    NAME = 'king'
+
+class QueenEnums:
+    MOVEMENT = 1
+    NAME = 'queen'
+
+class RookEnums:
+    MOVEMENT = 1
+    NAME = 'tank'
+
+class BishopEnums:
+    MOVEMENT = 1
+    NAME = 'recon'
+
+class KnightEnums:
+    MOVEMENT = 1
+    NAME = 'artillery' 
+
+class PawnEnums:
+    MOVEMENT = 1
+    NAME = 'infantry'

@@ -1,9 +1,13 @@
 # Pawn
 from Piece import Piece
-from enums import Player
+from enums import PawnEnums, Player
 
 
 class Pawn(Piece):
+    def __init__(self, row_number, col_number, player):
+        name = PawnEnums.NAME
+        super().__init__(name, row_number, col_number, player)
+
     def get_valid_piece_takes(self, game_state):
         _moves = []
         if self.is_player(Player.PLAYER_1):

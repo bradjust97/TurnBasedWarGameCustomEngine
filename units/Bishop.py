@@ -1,10 +1,11 @@
 # Bishop
 from Piece import Piece
-from enums import Player, SquareBoard
+from enums import BishopEnums, Player, SquareBoard
 
 
 class Bishop(Piece):
-    def __init__(self, name, row_number, col_number, player):
+    def __init__(self, row_number, col_number, player):
+        name = BishopEnums.NAME
         super().__init__(name, row_number, col_number, player)
 
     def get_valid_piece_takes(self, game_state):

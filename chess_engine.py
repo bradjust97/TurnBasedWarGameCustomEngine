@@ -5,14 +5,6 @@
 # Note: move log class inspired by Eddie Sharick
 #
 from enums import Player, SquareBoard
-#from units import Bishop, King, Queen, Knight, Rook, Pawn
-#from units.Bishop import Bishop
-from units.King import King
-from units.Queen import Queen
-from units.Bishop import Bishop
-from units.Knight import Knight
-from units.Rook import Rook
-from units.Pawn import Pawn
 from startingBoards.advancedWarsChess import advancedWarsChess
 
 '''
@@ -53,9 +45,9 @@ class game_state:
         self._white_king_location = [0, 3]
         self._black_king_location = [7, 3]
 
-        self.white_king_can_castle = [True, True,
-                                      True]  # Has king not moved, has Rook1(col=0) not moved, has Rook2(col=7) not moved
-        self.black_king_can_castle = [True, True, True]
+        self.white_king_can_castle = [False, False,
+                                      False]  # Has king not moved, has Rook1(col=0) not moved, has Rook2(col=7) not moved
+        self.black_king_can_castle = [False, False, False]
 
         self.white_pieces = advancedWarsChess.white_pieces
         self.black_pieces = advancedWarsChess.black_pieces
@@ -135,36 +127,6 @@ class game_state:
         else:
             return self.black_king_can_castle[0] and self.black_king_can_castle[2] and \
                    self.get_piece(7, 6) is Player.EMPTY and self.get_piece(7, 5) is Player.EMPTY and not self._is_check
-
-    def promote_pawn(self, starting_square, moved_piece, ending_square):
-        while True:
-            new_piece_name = input("Change pawn to (r, n, b, q):\n")
-            piece_classes = {"r": Rook, "n": Knight, "b": Bishop, "q": Queen}
-            if new_piece_name in piece_classes:
-                move = chess_move(starting_square, ending_square, self, self._is_check)
-
-                new_piece = piece_classes[new_piece_name](new_piece_name, ending_square[0],
-                                                          ending_square[1], moved_piece.get_player())
-                self.board[ending_square[0]][ending_square[1]] = new_piece
-                self.board[moved_piece.get_row_number()][moved_piece.get_col_number()] = Player.EMPTY
-                moved_piece.change_row_number(ending_square[0])
-                moved_piece.change_col_number(ending_square[1])
-                move.pawn_promotion_move(new_piece)
-                self.move_log.append(move)
-                break
-            else:
-                print("Please choose from these four: r, n, b, q.\n")
-
-    def promote_pawn_ai(self, starting_square, moved_piece, ending_square):
-        move = chess_move(starting_square, ending_square, self, self._is_check)
-        # The ai can only promote the pawn to queen
-        new_piece = Queen("q", ending_square[0], ending_square[1], moved_piece.get_player())
-        self.board[ending_square[0]][ending_square[1]] = new_piece
-        self.board[moved_piece.get_row_number()][moved_piece.get_col_number()] = Player.EMPTY
-        moved_piece.change_row_number(ending_square[0])
-        moved_piece.change_col_number(ending_square[1])
-        move.pawn_promotion_move(new_piece)
-        self.move_log.append(move)
 
     # have to fix en passant for ai
     def can_en_passant(self, current_square_row, current_square_col):
@@ -274,63 +236,10 @@ class game_state:
                             self.black_king_can_castle[0] = False
                         self._black_king_location = (next_square_row, next_square_col)
                         # self.can_en_passant_bool = False  WHAT IS THIS
-                elif moving_piece.get_name() is "r":
-                    if moving_piece.is_player(Player.PLAYER_1) and current_square_col == 0:
-                        self.white_king_can_castle[1] = False
-                    elif moving_piece.is_player(Player.PLAYER_1) and current_square_col == 7:
-                        self.white_king_can_castle[2] = False
-                    elif moving_piece.is_player(Player.PLAYER_2) and current_square_col == 0:
-                        self.white_king_can_castle[1] = False
-                    elif moving_piece.is_player(Player.PLAYER_2) and current_square_col == 7:
-                        self.white_king_can_castle[2] = False
-                    self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
-                    self.can_en_passant_bool = False
                 # Add move class here
                 elif moving_piece.get_name() is "p":
-                    # Promoting white pawn
-                    if moving_piece.is_player(Player.PLAYER_1) and next_square_row == 7:
-                        # print("promoting white pawn")
-                        if is_ai:
-                            self.promote_pawn_ai(starting_square, moving_piece, ending_square)
-                        else:
-                            self.promote_pawn(starting_square, moving_piece, ending_square)
-                        temp = False
-                    # Promoting black pawn
-                    elif moving_piece.is_player(Player.PLAYER_2) and next_square_row == 0:
-                        # print("promoting black pawn")
-                        if is_ai:
-                            self.promote_pawn_ai(starting_square, moving_piece, ending_square)
-                        else:
-                            self.promote_pawn(starting_square, moving_piece, ending_square)
-                        temp = False
-                    # Moving pawn forward by two
-                    # Problem with Pawn en passant ai
-                    elif abs(next_square_row - current_square_row) == 2 and current_square_col == next_square_col:
-                        # print("move pawn forward")
-                        self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
-                        # self.can_en_passant_bool = True
-                        self._en_passant_previous = (next_square_row, next_square_col)
-                    # en passant
-                    elif abs(next_square_row - current_square_row) == 1 and abs(
-                            current_square_col - next_square_col) == 1 and \
-                            self.can_en_passant(current_square_row, current_square_col):
-                        # print("en passant")
-                        if moving_piece.is_player(Player.PLAYER_1):
-                            move = chess_move(starting_square, ending_square, self, self._is_check)
-                            move.en_passant_move(self.board[next_square_row - 1][next_square_col],
-                                                 (next_square_row - 1, next_square_col))
-                            self.move_log.append(move)
-                            self.board[next_square_row - 1][next_square_col] = Player.EMPTY
-                        else:
-                            move = chess_move(starting_square, ending_square, self, self._is_check)
-                            move.en_passant_move(self.board[next_square_row + 1][next_square_col],
-                                                 (next_square_row + 1, next_square_col))
-                            self.move_log.append(move)
-                            self.board[next_square_row + 1][next_square_col] = Player.EMPTY
-                    # moving forward by one or taking a piece
-                    else:
-                        self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
-                        self.can_en_passant_bool = False
+                    self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
+                    self.can_en_passant_bool = False
                 else:
                     self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
                     self.can_en_passant_bool = False

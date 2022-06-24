@@ -1,10 +1,11 @@
 # Rook (R)
 from Piece import Piece
-from enums import Player, SquareBoard
+from enums import Player, RookEnums, SquareBoard
 
 
 class Rook(Piece):
-    def __init__(self, name, row_number, col_number, player):
+    def __init__(self, row_number, col_number, player):
+        name = RookEnums.NAME
         super().__init__(name, row_number, col_number, player)
         self.has_moved = False
 

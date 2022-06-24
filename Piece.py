@@ -9,11 +9,12 @@ from enums import Player, SquareBoard
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player):
+    def __init__(self, name, row_number, col_number, player):#, movement):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
         self._player = player
+        #self.movement = movement
 
     # Get the x value
     def get_row_number(self):
