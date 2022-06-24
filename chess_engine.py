@@ -73,13 +73,13 @@ class game_state:
         if self.is_valid_piece(current_row, current_col):
             moving_piece = self.get_piece(current_row, current_col)
             initial_valid_piece_moves = moving_piece.get_valid_piece_moves(self)
-            print("Before")
-            print(initial_valid_piece_moves)
-            for move in initial_valid_piece_moves:
-                if self.is_wall(move[0], move[1]):
-                    initial_valid_piece_moves.remove(move)
-            print("After")
-            print(initial_valid_piece_moves)
+            # print("Before")
+            # print(initial_valid_piece_moves)
+            # for move in initial_valid_piece_moves:
+            #     if self.is_wall(move[0], move[1]):
+            #         initial_valid_piece_moves.remove(move)
+            # print("After")
+            # print(initial_valid_piece_moves)
             return initial_valid_piece_moves
         else:
             return None

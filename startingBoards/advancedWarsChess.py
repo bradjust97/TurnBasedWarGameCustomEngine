@@ -40,6 +40,10 @@ board = [[Player.EMPTY for x in range(SquareBoard.DIMENSIONS)] for y in range(Sq
 
 
 board[8][8] = Player.WALL
+board[8][9] = Player.WALL
+board[8][6] = Player.WALL
+board[8][5] = Player.WALL
+board[8][4] = Player.WALL
 
 for piece in white_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece
