@@ -4,8 +4,15 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
-from Piece import Rook, Knight, Bishop, Queen, King, Pawn
 from enums import Player, SquareBoard
+#from units import Bishop, King, Queen, Knight, Rook, Pawn
+#from units.Bishop import Bishop
+from units.King import King
+from units.Queen import Queen
+from units.Bishop import Bishop
+from units.Knight import Knight
+from units.Rook import Rook
+from units.Pawn import Pawn
 from startingBoards.advancedWarsChess import advancedWarsChess
 
 '''

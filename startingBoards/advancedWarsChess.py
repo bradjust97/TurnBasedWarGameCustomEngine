@@ -1,6 +1,11 @@
-# Initialize White pieces
-from Piece import Bishop, King, Knight, Pawn, Queen, Rook
 from enums import Player, SquareBoard
+from units.King import King
+from units.Queen import Queen
+from units.Bishop import Bishop
+from units.Knight import Knight
+from units.Rook import Rook
+from units.Pawn import Pawn
+#from units import Bishop.Bishop, King, Queen, Knight, Rook, Pawn
 
 
 white_rook_1 = Rook('tank', 0, 0, Player.PLAYER_1)
