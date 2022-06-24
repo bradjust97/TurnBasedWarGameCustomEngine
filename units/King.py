@@ -43,16 +43,6 @@ class King(Piece):
             if evaluating_square == Player.EMPTY:
                 _moves.append((new_row, new_col))
 
-        if game_state.king_can_castle_left(self.get_player()):
-            if self.is_player(Player.PLAYER_1):
-                _moves.append((0, 1))
-            elif self.is_player(Player.PLAYER_2):
-                _moves.append((7, 1))
-        elif game_state.king_can_castle_right(self.get_player()):
-            if self.is_player(Player.PLAYER_1):
-                _moves.append((0, 5))
-            elif self.is_player(Player.PLAYER_2):
-                _moves.append((7, 5))
         return _moves
 
     def get_valid_piece_moves(self, game_state):
