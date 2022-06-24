@@ -41,26 +41,12 @@ class Pawn(Piece):
         if self.is_player(Player.PLAYER_1):
             # when the square right below the starting_square is empty
             if game_state.get_piece(self.get_row_number() + 1, self.get_col_number()) == Player.EMPTY:
-                # when the pawn has not been moved yet
-                if self.get_row_number() == 1 and game_state.get_piece(self.get_row_number() + 2,
-                                                                       self.get_col_number()) == Player.EMPTY:
-                    _moves.append((self.get_row_number() + 1, self.get_col_number()))
-                    _moves.append((self.get_row_number() + 2, self.get_col_number()))
-                # when the pawn has already been moved
-                else:
-                    _moves.append((self.get_row_number() + 1, self.get_col_number()))
+                _moves.append((self.get_row_number() + 1, self.get_col_number()))
         # when the pawn is a black piece
         elif self.is_player(Player.PLAYER_2):
             # when the square right above is empty
             if game_state.get_piece(self.get_row_number() - 1, self.get_col_number()) == Player.EMPTY:
-                # when the pawn has not been moved yet
-                if self.get_row_number() == 6 and game_state.get_piece(self.get_row_number() - 2,
-                                                                       self.get_col_number()) == Player.EMPTY:
-                    _moves.append((self.get_row_number() - 1, self.get_col_number()))
-                    _moves.append((self.get_row_number() - 2, self.get_col_number()))
-                # when the pawn has been moved
-                else:
-                    _moves.append((self.get_row_number() - 1, self.get_col_number()))
+                _moves.append((self.get_row_number() - 1, self.get_col_number()))
         return _moves
 
     def get_valid_piece_moves(self, game_state):
