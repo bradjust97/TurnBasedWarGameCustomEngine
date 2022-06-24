@@ -22,6 +22,7 @@ white_pieces = [white_rook_1, white_knight_1, white_bishop_1,
 
 # Initialize Black Pieces
 black_rook_2 = Rook(15, 15, Player.PLAYER_2)
+black_rook_3 = Rook(8, 7, Player.PLAYER_2)
 black_knight_2 = Knight(15, 14, Player.PLAYER_2)
 black_bishop_2 = Bishop(15, 13, Player.PLAYER_2)
 black_king = King(15, 11, Player.PLAYER_2)
@@ -33,9 +34,12 @@ black_pawn_8 = Pawn(14, 15, Player.PLAYER_2)
 black_pieces = [ black_rook_2, black_knight_2, black_bishop_2,
                          black_king, black_pawn_4,
                         black_pawn_5,
-                        black_pawn_6, black_pawn_7, black_pawn_8]  #black_queen,
+                        black_pawn_6, black_pawn_7, black_pawn_8, black_rook_3]  #black_queen,
 
 board = [[Player.EMPTY for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
+
+
+board[8][8] = Player.WALL
 
 for piece in white_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece

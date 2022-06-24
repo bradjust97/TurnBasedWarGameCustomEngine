@@ -60,21 +60,26 @@ class game_state:
 
     def is_valid_piece(self, row, col):
         evaluated_piece = self.get_piece(row, col)
-        return (evaluated_piece is not None) and (evaluated_piece != Player.EMPTY)
+        return (evaluated_piece is not None) and (evaluated_piece != Player.EMPTY) and (evaluated_piece != Player.WALL)
+    
+    def is_wall(self, row, col):
+        evaluated_piece = self.get_piece(row, col)
+        return (evaluated_piece == Player.WALL)
 
     def get_valid_moves(self, starting_square):
-        '''
-        remove pins from valid moves (unless the pinned piece move can get rid of a check and checks is empty
-        remove move from valid moves if the move falls within a check piece's valid move
-        if the moving piece is a king, the ending square cannot be in a check
-        '''
-
         current_row = starting_square[0]
         current_col = starting_square[1]
 
         if self.is_valid_piece(current_row, current_col):
             moving_piece = self.get_piece(current_row, current_col)
             initial_valid_piece_moves = moving_piece.get_valid_piece_moves(self)
+            print("Before")
+            print(initial_valid_piece_moves)
+            for move in initial_valid_piece_moves:
+                if self.is_wall(move[0], move[1]):
+                    initial_valid_piece_moves.remove(move)
+            print("After")
+            print(initial_valid_piece_moves)
             return initial_valid_piece_moves
         else:
             return None

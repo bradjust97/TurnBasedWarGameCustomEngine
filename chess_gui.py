@@ -18,7 +18,7 @@ DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the chess board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations
 IMAGES = {}  # images for the chess pieces
-colors = [py.Color("white"), py.Color("gray")]
+colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 
 # TODO: AI black has been worked on. Mirror progress for other two modes
 def load_images():
@@ -40,7 +40,15 @@ def draw_game_state(screen, game_state, valid_moves, square_selected):
     '''
     draw_squares(screen)
     highlight_square(screen, game_state, valid_moves, square_selected)
+    draw_walls(screen, game_state)
     draw_pieces(screen, game_state)
+
+def draw_walls(screen, game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            piece = game_state.get_piece(r, c)
+            if piece == Player.WALL:
+                py.draw.rect(screen, colors[2], py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
 def draw_squares(screen):
@@ -63,7 +71,7 @@ def draw_pieces(screen, game_state):
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             piece = game_state.get_piece(r, c)
-            if piece is not None and piece != Player.EMPTY:
+            if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
                 screen.blit(IMAGES[piece.get_player() + "_" + piece.get_name()],
                             py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
