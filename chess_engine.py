@@ -33,8 +33,6 @@ class game_state:
         self.black_captives = []
         self.move_log = []
         self.white_turn = True
-        self.can_en_passant_bool = False
-        self._en_passant_previous = (-1, -1)
         self.checkmate = False
         self.stalemate = False
         self.white_is_dead = False
@@ -112,18 +110,6 @@ class game_state:
                         _all_valid_moves.append(((row, col), move))
         return _all_valid_moves
 
-    # have to fix en passant for ai
-    def can_en_passant(self, current_square_row, current_square_col):
-        return False
-        # if is_ai:
-        #     return False
-        # else:
-        #     return self.can_en_passant_bool and current_square_row == self.previous_piece_en_passant()[0] \
-        #            and abs(current_square_col - self.previous_piece_en_passant()[1]) == 1
-
-    def previous_piece_en_passant(self):
-        return self._en_passant_previous
-
     # Move a piece
     def move_piece(self, starting_square, ending_square, is_ai):
         current_square_row = starting_square[0]  # The integer row value of the starting square
@@ -190,19 +176,10 @@ class chess_move():
         self.pawn_promoted = False
         self.replacement_piece = None
 
-        self.en_passaned = False
-        self.en_passant_eaten_piece = None
-        self.en_passant_eaten_square = None
-
 
     def pawn_promotion_move(self, new_piece):
         self.pawn_promoted = True
         self.replacement_piece = new_piece
-
-    def en_passant_move(self, eaten_piece, eaten_piece_square):
-        self.en_passaned = True
-        self.en_passant_eaten_piece = eaten_piece
-        self.en_passant_eaten_square = eaten_piece_square
 
     def get_moving_piece(self):
         return self.moving_piece
