@@ -8,7 +8,6 @@
 import chess_engine
 import pygame as py
 
-import ai_engine
 from enums import Player, SquareBoard
 
 """Variables"""
@@ -20,7 +19,6 @@ MAX_FPS = 15  # FPS for animations
 IMAGES = {}  # images for the chess pieces
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 
-# TODO: AI black has been worked on. Mirror progress for other two modes
 def load_images():
     '''
     Load images for the chess pieces
@@ -97,29 +95,6 @@ def highlight_square(screen, game_state, valid_moves, square_selected):
 
 
 def main():
-    # Check for the number of players and the color of the AI
-    human_player = ""
-    # while True:
-    #     try:
-    #         number_of_players = input("How many players (1 or 2)?\n")
-    #         if int(number_of_players) == 1:
-    #             number_of_players = 1
-    #             while True:
-    #                 human_player = input("What color do you want to play (w or b)?\n")
-    #                 if human_player is "w" or human_player is "b":
-    #                     break
-    #                 else:
-    #                     print("Enter w or b.\n")
-    #             break
-    #         elif int(number_of_players) == 2:
-    #             number_of_players = 2
-    #             break
-    #         else:
-    #             print("Enter 1 or 2.\n")
-    #     except ValueError:
-    #         print("Enter 1 or 2.")
-    # number_of_players = 2
-
     py.init()
     screen = py.display.set_mode((WIDTH, HEIGHT))
     clock = py.time.Clock()
@@ -131,11 +106,7 @@ def main():
     valid_moves = []
     game_over = False
 
-    ai = ai_engine.chess_ai()
     game_state = chess_engine.game_state()
-    if human_player is 'b':
-        ai_move = ai.minimax_black(game_state, 3, -100000, 100000, True, Player.PLAYER_1)
-        game_state.move_piece(ai_move[0], ai_move[1], True)
 
     while running:
         for e in py.event.get():
@@ -160,17 +131,11 @@ def main():
                             valid_moves = []
                         else:
                             game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
-                                                  (player_clicks[1][0], player_clicks[1][1]), False)
+                                                  (player_clicks[1][0], player_clicks[1][1]))
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
 
-                            if human_player is 'w':
-                                ai_move = ai.minimax_white(game_state, 3, -100000, 100000, True, Player.PLAYER_2)
-                                game_state.move_piece(ai_move[0], ai_move[1], True)
-                            elif human_player is 'b':
-                                ai_move = ai.minimax_black(game_state, 3, -100000, 100000, True, Player.PLAYER_1)
-                                game_state.move_piece(ai_move[0], ai_move[1], True)
                     else:
                         valid_moves = game_state.get_valid_moves((row, col))
                         print(valid_moves)

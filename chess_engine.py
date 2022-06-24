@@ -23,7 +23,6 @@ r \ c     0           1           2           3           4           5         
 # TODO: Flip the board according to the player
 # TODO: Pawns are usually indicated by no letters
 # TODO: stalemate
-# TODO: change move method argument about is_ai into something more elegant
 class game_state:
     # Initialize 2D array to represent the chess board
     def __init__(self):
@@ -66,13 +65,6 @@ class game_state:
         if self.is_valid_piece(current_row, current_col):
             moving_piece = self.get_piece(current_row, current_col)
             initial_valid_piece_moves = moving_piece.get_valid_piece_moves(self)
-            # print("Before")
-            # print(initial_valid_piece_moves)
-            # for move in initial_valid_piece_moves:
-            #     if self.is_wall(move[0], move[1]):
-            #         initial_valid_piece_moves.remove(move)
-            # print("After")
-            # print(initial_valid_piece_moves)
             return initial_valid_piece_moves
         else:
             return None
@@ -111,7 +103,7 @@ class game_state:
         return _all_valid_moves
 
     # Move a piece
-    def move_piece(self, starting_square, ending_square, is_ai):
+    def move_piece(self, starting_square, ending_square):
         current_square_row = starting_square[0]  # The integer row value of the starting square
         current_square_col = starting_square[1]  # The integer col value of the starting square
         next_square_row = ending_square[0]  # The integer row value of the ending square
