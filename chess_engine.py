@@ -20,9 +20,6 @@ r \ c     0           1           2           3           4           5         
 '''
 
 
-# TODO: Flip the board according to the player
-# TODO: Pawns are usually indicated by no letters
-# TODO: stalemate
 class game_state:
     # Initialize 2D array to represent the chess board
     def __init__(self):
@@ -152,11 +149,10 @@ class game_state:
 
 
 class chess_move():
-    def __init__(self, starting_square, ending_square, game_state, in_check):
+    def __init__(self, starting_square, ending_square, game_state):
         self.starting_square_row = starting_square[0]
         self.starting_square_col = starting_square[1]
         self.moving_piece = game_state.get_piece(self.starting_square_row, self.starting_square_col)
-        self.in_check = in_check
 
         self.ending_square_row = ending_square[0]
         self.ending_square_col = ending_square[1]
@@ -171,11 +167,6 @@ class chess_move():
 
         self.pawn_promoted = False
         self.replacement_piece = None
-
-
-    def pawn_promotion_move(self, new_piece):
-        self.pawn_promoted = True
-        self.replacement_piece = new_piece
 
     def get_moving_piece(self):
         return self.moving_piece
