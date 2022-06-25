@@ -19,7 +19,7 @@ def make_movement_diamond(movement):
 def blocked_movement_diamond(movement, valid_moves, row_number, col_number, game_state):
     checked = [[row_number,col_number]]
     M = movement
-    m = 1
+    m = 0
     DFSList = DFS_Traverse_Diamond(checked, M, m, game_state)
     # remove dupes
     listOfLists = [list(t) for t in set(tuple(element) for element in DFSList)]
