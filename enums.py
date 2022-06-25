@@ -34,5 +34,5 @@ class KnightEnums:
     NAME = 'artillery' 
 
 class PawnEnums:
-    MOVEMENT = 1
+    MOVEMENT = 4
     NAME = 'infantry'
