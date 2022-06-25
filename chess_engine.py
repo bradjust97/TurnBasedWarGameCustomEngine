@@ -4,6 +4,7 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
+from Piece import Piece
 from enums import Player, SquareBoard
 from startingBoards.advancedWarsChess import advancedWarsChess
 
@@ -34,19 +35,23 @@ class game_state:
         self.white_is_dead = False
         self.black_is_dead = False
 
-        self._is_check = False
         self._white_king_location = [0, 3]
         self._black_king_location = [7, 3]
 
         self.white_pieces = advancedWarsChess.white_pieces
         self.black_pieces = advancedWarsChess.black_pieces
         self.board = advancedWarsChess.board
+        self.moved_pieces = [] 
 
+    def end_turn(self):
+        print("Ending turn")
+        self.white_turn = not self.white_turn
 
     def get_piece(self, row, col):
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.board[row][col]
 
+    # returns if player piece
     def is_valid_piece(self, row, col):
         evaluated_piece = self.get_piece(row, col)
         return (evaluated_piece is not None) and (evaluated_piece != Player.EMPTY) and (evaluated_piece != Player.WALL)
@@ -69,15 +74,25 @@ class game_state:
             return initial_valid_piece_moves
         else:
             return None
+    
+    def piece_moved(self, piece: Piece):
+        self.moved_pieces.append(piece)
+
+    def has_piece_moved(self, piece):
+        return piece in self.moved_pieces
+    
+    def reset_moved_pieces(self):
+        print("Reseting moved pieces")
+        self.moved_pieces = []
 
     # 0 if white lost, 1 if black lost, 2 if stalemate, 3 if not game over
     def checkmate_stalemate_checker(self):
         all_white_moves = self.get_all_legal_moves(Player.PLAYER_1)
         all_black_moves = self.get_all_legal_moves(Player.PLAYER_2)
-        if self._is_check and self.whose_turn() and not all_white_moves:
+        if self.whose_turn() and not all_white_moves:
             print("white lost")
             return 0
-        elif self._is_check and not self.whose_turn() and not all_black_moves:
+        elif not self.whose_turn() and not all_black_moves:
             print("black lost")
             return 1
         elif not all_white_moves and not all_black_moves:
@@ -111,10 +126,9 @@ class game_state:
         next_square_col = ending_square[1]  # The integer col value of the ending square
 
         if self.is_valid_piece(current_square_row, current_square_col) and \
-                (((self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(
-                    Player.PLAYER_1)) or
-                  (not self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(
-                      Player.PLAYER_2)))):
+            not self.has_piece_moved(self.get_piece(current_square_row, current_square_col)) and \
+                ((self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(Player.PLAYER_1)) or
+                  (not self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(Player.PLAYER_2))):
 
             # The chess piece at the starting square
             moving_piece = self.get_piece(current_square_row, current_square_col)
@@ -130,7 +144,7 @@ class game_state:
                         self.black_is_dead = True
                     elif moved_to_piece.get_name() == "king" and not self.whose_turn():
                         self.white_is_dead = True
-                self.move_log.append(chess_move(starting_square, ending_square, self, self._is_check))
+                self.move_log.append(chess_move(starting_square, ending_square, self))
 
                 if temp:
                     moving_piece.change_row_number(next_square_row)
@@ -138,7 +152,8 @@ class game_state:
                     self.board[next_square_row][next_square_col] = self.board[current_square_row][current_square_col]
                     self.board[current_square_row][current_square_col] = Player.EMPTY
 
-                self.white_turn = not self.white_turn
+                self.piece_moved(moving_piece)
+                #self.white_turn = not self.white_turn
 
             else:
                 pass

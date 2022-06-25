@@ -69,7 +69,9 @@ def draw_pieces(screen, game_state):
 
 
 def highlight_square(screen, game_state, valid_moves, square_selected):
-    if square_selected != () and game_state.is_valid_piece(square_selected[0], square_selected[1]):
+    if square_selected != () and game_state.is_valid_piece(square_selected[0], square_selected[1]) and \
+        not game_state.has_piece_moved(game_state.get_piece(square_selected[0], square_selected[1])):
+
         row = square_selected[0]
         col = square_selected[1]
 
@@ -118,16 +120,13 @@ def main():
                         square_selected = (row, col)
                         player_clicks.append(square_selected)
                     if len(player_clicks) == 2:
-                        print("yeesong")
-                        print(valid_moves)
-                        print("yue")
                         # this if is useless right now
                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
                         else:
-                            print("attempting to move pice")
+                            print("attempting to move piece")
                             game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
                                                   (player_clicks[1][0], player_clicks[1][1]))
                             square_selected = ()
@@ -136,23 +135,24 @@ def main():
 
                     else:
                         valid_moves = game_state.get_valid_moves((row, col))
-                        pprint("Valid Moves:")
-                        pprint(valid_moves)
-                        #print(valid_moves)
                         if valid_moves is None:
                             print("valid moves is none")
                             valid_moves = []
             elif e.type == py.KEYDOWN:
-                if e.key == py.K_r:
-                    game_over = False
-                    game_state = chess_engine.game_state()
-                    valid_moves = []
-                    square_selected = ()
-                    player_clicks = []
-                    valid_moves = []
-                elif e.key == py.K_u:
-                    game_state.undo_move()
-                    print(len(game_state.move_log))
+                if (e.key == py.K_e):
+                    print("End turn pressed")
+                    game_state.end_turn()
+                    game_state.reset_moved_pieces()
+                # if e.key == py.K_r:
+                #     game_over = False
+                #     game_state = chess_engine.game_state()
+                #     valid_moves = []
+                #     square_selected = ()
+                #     player_clicks = []
+                #     valid_moves = []
+                # elif e.key == py.K_u:
+                #     game_state.undo_move()
+                #     print(len(game_state.move_log))
 
         draw_game_state(screen, game_state, valid_moves, square_selected)
 
