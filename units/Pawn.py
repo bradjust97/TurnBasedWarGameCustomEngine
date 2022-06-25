@@ -2,7 +2,7 @@
 import itertools
 from Piece import Piece
 from enums import PawnEnums, Player
-from movement_engine import movement_engine
+from movement_engine import blocked_movement_diamond, make_movement_diamond
 
 
 class Pawn(Piece):
@@ -13,7 +13,7 @@ class Pawn(Piece):
 
     def get_valid_piece_takes(self, game_state):
         _moves = []
-        possible_moves = movement_engine.make_movement_diamond(PawnEnums.MOVEMENT)
+        possible_moves = make_movement_diamond(PawnEnums.MOVEMENT)
 
         for i in range(0, len(possible_moves)):
             new_row = self.get_row_number() + possible_moves[i][0]
@@ -31,7 +31,7 @@ class Pawn(Piece):
 
     def get_valid_peaceful_moves(self, game_state):
         _moves = []
-        possible_moves = movement_engine.make_movement_diamond(PawnEnums.MOVEMENT)
+        possible_moves = make_movement_diamond(PawnEnums.MOVEMENT)
 
         # list(itertools.product(row_change, col_change))
         for i in range(0, len(possible_moves)):
@@ -45,4 +45,6 @@ class Pawn(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
+        total_moves = self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
+        # return total_moves
+        return blocked_movement_diamond(PawnEnums.MOVEMENT, total_moves, self.get_row_number(), self.get_col_number(), game_state)

@@ -57,6 +57,10 @@ class game_state:
     def is_wall(self, row, col):
         evaluated_piece = self.get_piece(row, col)
         return (evaluated_piece == Player.WALL)
+    
+    def is_empty(self, row, col):
+        evaluated_piece = self.get_piece(row, col)
+        return (evaluated_piece == Player.EMPTY)
 
     def get_valid_moves(self, starting_square):
         current_row = starting_square[0]
