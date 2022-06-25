@@ -28,7 +28,6 @@ def blocked_movement_diamond(movement, valid_moves, row_number, col_number, game
 def DFS_Traverse_Diamond(checked, M, m, game_state):
     newC = checked.copy()
     for square in checked:
-        #print(square)
         if(game_state.is_empty(square[0]+1, square[1]) and [square[0]+1, square[1]] not in checked):
             newC.append([square[0]+1, square[1]])
 
