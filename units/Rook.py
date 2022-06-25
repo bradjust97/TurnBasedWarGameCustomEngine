@@ -1,7 +1,7 @@
 # Rook (R)
 from Piece import Piece
 from enums import Player, RookEnums, SquareBoard
-from movement_engine import make_movement_diamond
+from movement_engine import blocked_movement_diamond, make_movement_diamond
 
 
 class Rook(Piece):
@@ -44,7 +44,8 @@ class Rook(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
+        return blocked_movement_diamond(RookEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)
+        #return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
 
     # def traverse(self, game_state):
     #     _peaceful_moves = []

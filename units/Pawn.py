@@ -45,6 +45,6 @@ class Pawn(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        total_moves = self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
+        #total_moves = self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
         # return total_moves
-        return blocked_movement_diamond(PawnEnums.MOVEMENT, total_moves, self.get_row_number(), self.get_col_number(), game_state)
+        return blocked_movement_diamond(PawnEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)

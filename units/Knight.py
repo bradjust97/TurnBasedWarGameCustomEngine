@@ -1,7 +1,7 @@
 # Knight (N)
 from Piece import Piece
-from enums import KnightEnums, Player, SquareBoard
-from movement_engine import make_movement_diamond
+from enums import KnightEnums, PawnEnums, Player, SquareBoard
+from movement_engine import blocked_movement_diamond, make_movement_diamond
 
 
 class Knight(Piece):
@@ -44,4 +44,5 @@ class Knight(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
+        return blocked_movement_diamond(KnightEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)
+        # return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
