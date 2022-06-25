@@ -22,17 +22,17 @@ class QueenEnums:
     NAME = 'queen'
 
 class RookEnums:
-    MOVEMENT = 1
+    MOVEMENT = 6
     NAME = 'tank'
 
 class BishopEnums:
-    MOVEMENT = 1
+    MOVEMENT = 8
     NAME = 'recon'
 
 class KnightEnums:
-    MOVEMENT = 1
+    MOVEMENT = 4
     NAME = 'artillery' 
 
 class PawnEnums:
-    MOVEMENT = 4
+    MOVEMENT = 3
     NAME = 'infantry'
