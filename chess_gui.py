@@ -34,6 +34,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected):
     highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
     draw_pieces(screen, game_state)
+    grayout_squares(screen, game_state)
 
 def draw_walls(screen, game_state):
     for r in range(DIMENSION):
@@ -88,6 +89,16 @@ def highlight_square(screen, game_state, valid_moves, square_selected):
 
             for move in valid_moves:
                 screen.blit(s, (move[1] * SQ_SIZE, move[0] * SQ_SIZE))
+    
+def grayout_squares(screen, game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            piece = game_state.get_piece(r, c)
+            if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
+                s = py.Surface((SQ_SIZE, SQ_SIZE))
+                s.set_alpha(100)
+                s.fill(py.Color("grey"))
+                screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
 
 
 def main():
@@ -173,7 +184,7 @@ def main():
 
 def draw_text(screen, text):
     font = py.font.SysFont("Helvitca", 32, True, False)
-    text_object = font.render(text, False, py.Color("Black"))
+    text_object = font.render(text, False, py.Color("Red"))
     text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
                                                       HEIGHT / 2 - text_object.get_height() / 2)
     screen.blit(text_object, text_location)
