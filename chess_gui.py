@@ -1,6 +1,7 @@
 from pprint import pprint
 import chess_engine
 import pygame as py
+from combat_engine import get_pieces_within_range
 
 from enums import Player, SquareBoard
 
@@ -137,13 +138,24 @@ def main():
                             player_clicks = []
                             valid_moves = []
                         else:
-                            print("attempting to move piece")
                             game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
                                                   (player_clicks[1][0], player_clicks[1][1]))
                             movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
-                            print(movedPiece.get_row_number())
-                            print(movedPiece.get_col_number())
-                            game_state.get_postmove_options(movedPiece)
+                            options = game_state.get_postmove_options(movedPiece)
+                            text = processOptions(options)
+                            
+                            if 1 in options:
+                                action = input(text)
+                                if action == "1":
+                                    attackablePieces = get_pieces_within_range(movedPiece, game_state)
+                                    for p in attackablePieces:
+                                        targetKilled = movedPiece.standard_attack(p)
+                                        if (targetKilled):
+                                            print(p)
+                                            game_state.remove_piece(p)
+                                elif action == "0":
+                                    pass
+
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
@@ -192,6 +204,14 @@ def draw_text(screen, text):
     text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
                                                       HEIGHT / 2 - text_object.get_height() / 2)
     screen.blit(text_object, text_location)
+
+def processOptions(options):
+    # if 0 in options:
+    #     text = "What would you like to do? 0 = wait\n"
+    # if 1 in options:
+    #     text = "What would you like to do? 0 = wait 1 = attack\n"
+    # return text
+    return "What would you like to do? 0 = wait 1 = attack\n"
 
 
 if __name__ == "__main__":

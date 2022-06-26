@@ -53,7 +53,7 @@ class game_state:
             return self.board[row][col]
     
     def remove_piece(self, piece):
-        self.board[piece.get_row_number(), piece.get_col_number()] = Player.EMPTY
+        self.board[piece.get_row_number()][piece.get_col_number()] = Player.EMPTY
 
     # returns if player piece
     def is_valid_piece(self, row, col):
@@ -169,14 +169,10 @@ class game_state:
     
     def get_postmove_options(self, piece):
         options = [PostmoveOptions.WAIT]
-        print("yuuuuuue:")
-        print(piece.get_row_number())
-        print(piece.get_col_number())
         attackableEnemies = get_pieces_within_range(piece, self)
         if (len(attackableEnemies) != 0):
             options.append(PostmoveOptions.ATTACK)
         print("Returning postmove options")
-        print(options)
         return options
 
     # true if white, false if black
