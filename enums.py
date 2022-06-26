@@ -36,3 +36,7 @@ class KnightEnums:
 class PawnEnums:
     MOVEMENT = 3
     NAME = 'infantry'
+
+class PostmoveOptions:
+    WAIT = 0
+    ATTACK = 1

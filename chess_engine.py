@@ -5,7 +5,8 @@
 # Note: move log class inspired by Eddie Sharick
 #
 from Piece import Piece
-from enums import Player, SquareBoard
+from combat_engine import get_pieces_within_range
+from enums import Player, PostmoveOptions, SquareBoard
 from startingBoards.advancedWarsChess import advancedWarsChess
 
 '''
@@ -50,6 +51,9 @@ class game_state:
     def get_piece(self, row, col):
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.board[row][col]
+    
+    def remove_piece(self, piece):
+        self.board[piece.get_row_number(), piece.get_col_number()] = Player.EMPTY
 
     # returns if player piece
     def is_valid_piece(self, row, col):
@@ -157,6 +161,23 @@ class game_state:
 
             else:
                 pass
+    
+    def attack_piece(self, attacker: Piece, defender: Piece):
+        defenderDied = attacker.standard_attack(defender)
+        if defenderDied:
+            self.remove_piece(defender)
+    
+    def get_postmove_options(self, piece):
+        options = [PostmoveOptions.WAIT]
+        print("yuuuuuue:")
+        print(piece.get_row_number())
+        print(piece.get_col_number())
+        attackableEnemies = get_pieces_within_range(piece, self)
+        if (len(attackableEnemies) != 0):
+            options.append(PostmoveOptions.ATTACK)
+        print("Returning postmove options")
+        print(options)
+        return options
 
     # true if white, false if black
     def whose_turn(self):

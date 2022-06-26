@@ -140,6 +140,10 @@ def main():
                             print("attempting to move piece")
                             game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
                                                   (player_clicks[1][0], player_clicks[1][1]))
+                            movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+                            print(movedPiece.get_row_number())
+                            print(movedPiece.get_col_number())
+                            game_state.get_postmove_options(movedPiece)
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []

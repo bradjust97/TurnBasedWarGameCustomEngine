@@ -16,16 +16,31 @@ def make_movement_diamond(movement):
     return diamond
 
 # technically movement and row/col not needed if u query the diamond
+# TODO probably can remove moveAttacks in the future
 def blocked_movement_diamond(movement, row_number, col_number, game_state):
     checked = [[row_number,col_number]]
     moveAttacks = []
     M = movement
     m = 0
     (DFSList, moveAttacks) = DFS_Traverse_Diamond(checked, M, m, game_state, moveAttacks)
-    total_moves = DFSList + moveAttacks
+    #total_moves = DFSList + moveAttacks
     # remove dupes
-    listOfLists = [list(t) for t in set(tuple(element) for element in total_moves)]
+    listOfLists = [list(t) for t in set(tuple(element) for element in DFSList)]
+    # turn list of list to list of tuples
     return [tuple(l) for l in listOfLists]
+
+# # technically movement and row/col not needed if u query the diamond
+# def blocked_movement_diamond(movement, row_number, col_number, game_state):
+#     checked = [[row_number,col_number]]
+#     moveAttacks = []
+#     M = movement
+#     m = 0
+#     (DFSList, moveAttacks) = DFS_Traverse_Diamond(checked, M, m, game_state, moveAttacks)
+#     total_moves = DFSList + moveAttacks
+#     # remove dupes
+#     listOfLists = [list(t) for t in set(tuple(element) for element in total_moves)]
+#     # turn list of list to list of tuples
+#     return [tuple(l) for l in listOfLists]
 
 def DFS_Traverse_Diamond(checked, M, m, game_state, moveAttacksInput):
     moveAttacks = moveAttacksInput.copy()

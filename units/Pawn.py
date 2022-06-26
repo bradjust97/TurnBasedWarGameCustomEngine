@@ -1,6 +1,7 @@
 # Pawn
 import itertools
 from Piece import Piece
+from combat_engine import get_pieces_within_range
 from enums import PawnEnums, Player
 from movement_engine import blocked_movement_diamond, make_movement_diamond
 
@@ -48,3 +49,6 @@ class Pawn(Piece):
         #total_moves = self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
         # return total_moves
         return blocked_movement_diamond(PawnEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)
+    
+
+        #pieces_within_range = get_pieces_within_range(self, game_state)

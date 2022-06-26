@@ -5,16 +5,19 @@
 
 # General chess piece
 from enums import Player, SquareBoard
+from moveMenu import moveMenu
 
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player, movement=0):
+    def __init__(self, name, row_number, col_number, player, movement=0, moveMenu = None, range=1):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
         self._player = player
         self._movement = movement
+        self.moveMenu = moveMenu
+        self.range = range
 
     # Get the x value
     def get_row_number(self):
@@ -33,6 +36,9 @@ class Piece:
 
     def get_movement(self):
         return self._movement
+
+    def get_range(self):
+        return self.range
 
     def is_player(self, player_checked):
         return self.get_player() == player_checked
@@ -58,6 +64,11 @@ class Piece:
     # Get moves
     def get_valid_piece_moves(self, board):
         pass
+
+    def standard_attack(self, target):
+        print("Attacking target")
+        killTarget = True
+        return killTarget
 
 
 
