@@ -17,10 +17,6 @@ class KingEnums:
     MOVEMENT = 1
     NAME = 'king'
 
-class QueenEnums:
-    MOVEMENT = 1
-    NAME = 'queen'
-
 class RookEnums:
     MOVEMENT = 6
     NAME = 'tank'
