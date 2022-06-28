@@ -169,7 +169,8 @@ class game_state:
     
     def get_postmove_options(self, piece):
         options = [PostmoveOptions.WAIT]
-        attackableEnemies = get_pieces_within_range(piece, self)
+        attackableEnemies = get_pieces_within_range(piece, self) 
+        # TODO eventually abstract all detection methods on determining if an option is available or not
         if (len(attackableEnemies) != 0):
             options.append(PostmoveOptions.ATTACK)
         print("Returning postmove options")

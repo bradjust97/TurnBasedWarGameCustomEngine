@@ -36,3 +36,4 @@ class PawnEnums:
 class PostmoveOptions:
     WAIT = 0
     ATTACK = 1
+    WAITORATTACKTEXT = "What would you like to do? 0 = wait 1 = attack\n"

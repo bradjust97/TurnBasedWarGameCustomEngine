@@ -1,7 +1,6 @@
 # Pawn
 import itertools
 from Piece import Piece
-from combat_engine import get_pieces_within_range
 from enums import PawnEnums, Player
 from movement_engine import blocked_movement_diamond, make_movement_diamond
 

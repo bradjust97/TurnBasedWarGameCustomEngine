@@ -1,9 +1,10 @@
+import enum
 from pprint import pprint
 import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import Player, SquareBoard
+from enums import Player, PostmoveOptions, SquareBoard
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the chess board
@@ -137,25 +138,11 @@ def main():
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
+                            print("Out of movement range")
                         else:
-                            game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
-                                                  (player_clicks[1][0], player_clicks[1][1]))
-                            movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+                            movedPiece = gui_move(game_state, player_clicks)
                             options = game_state.get_postmove_options(movedPiece)
-                            text = processOptions(options)
-                            
-                            if 1 in options:
-                                action = input(text)
-                                if action == "1":
-                                    attackablePieces = get_pieces_within_range(movedPiece, game_state)
-                                    for p in attackablePieces:
-                                        targetKilled = movedPiece.standard_attack(p)
-                                        if (targetKilled):
-                                            print(p)
-                                            game_state.remove_piece(p)
-                                elif action == "0":
-                                    pass
-
+                            choose_and_execute_selected_option(options, game_state, movedPiece)
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
@@ -170,16 +157,62 @@ def main():
                     print("End turn pressed")
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
-                # if e.key == py.K_r:
-                #     game_over = False
-                #     game_state = chess_engine.game_state()
-                #     valid_moves = []
-                #     square_selected = ()
-                #     player_clicks = []
-                #     valid_moves = []
-                # elif e.key == py.K_u:
-                #     game_state.undo_move()
-                #     print(len(game_state.move_log))
+
+        # for e in py.event.get():
+        #     if e.type == py.QUIT:
+        #         running = False
+        #     elif e.type == py.MOUSEBUTTONDOWN:
+        #         if not game_over:
+        #             location = py.mouse.get_pos()
+        #             col = location[0] // SQ_SIZE
+        #             row = location[1] // SQ_SIZE
+        #             if square_selected == (row, col):
+        #                 square_selected = ()
+        #                 player_clicks = []
+        #             else:
+        #                 square_selected = (row, col)
+        #                 player_clicks.append(square_selected)
+        #             if len(player_clicks) == 2:
+        #                 # this if is useless right now
+        #                 if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
+        #                     square_selected = ()
+        #                     player_clicks = []
+        #                     valid_moves = []
+        #                     print("Out of movement range")
+        #                 else:
+        #                     game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
+        #                                           (player_clicks[1][0], player_clicks[1][1]))
+        #                     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+        #                     options = game_state.get_postmove_options(movedPiece)
+        #                     text = processOptions(options)
+                            
+        #                     if 1 in options:
+        #                         action = input(text)
+        #                         if action == "1":
+        #                             attackablePieces = get_pieces_within_range(movedPiece, game_state)
+        #                             for p in attackablePieces:
+        #                                 targetKilled = movedPiece.standard_attack(p)
+        #                                 if (targetKilled):
+        #                                     print(p)
+        #                                     game_state.remove_piece(p)
+        #                         elif action == "0":
+        #                             pass
+
+        #                     square_selected = ()
+        #                     player_clicks = []
+        #                     valid_moves = []
+
+        #             else:
+        #                 valid_moves = game_state.get_valid_moves((row, col))
+        #                 if valid_moves is None:
+        #                     print("valid moves is none")
+        #                     valid_moves = []
+        #     elif e.type == py.KEYDOWN:
+        #         if (e.key == py.K_e):
+        #             print("End turn pressed")
+        #             game_state.end_turn()
+        #             game_state.reset_moved_pieces()
+
 
         draw_game_state(screen, game_state, valid_moves, square_selected)
 
@@ -212,6 +245,25 @@ def processOptions(options):
     #     text = "What would you like to do? 0 = wait 1 = attack\n"
     # return text
     return "What would you like to do? 0 = wait 1 = attack\n"
+
+def gui_move(game_state, player_clicks):
+    game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
+    (player_clicks[1][0], player_clicks[1][1]))
+    movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+    return movedPiece
+
+def choose_and_execute_selected_option(options, game_state, sourcePiece):
+    if 1 in options:
+        action = input(PostmoveOptions.WAITORATTACKTEXT)
+        if action == "1":
+            attackablePieces = get_pieces_within_range(sourcePiece, game_state)
+            for p in attackablePieces:
+                targetKilled = sourcePiece.standard_attack(p)
+                if (targetKilled):
+                    print(p)
+                    game_state.remove_piece(p)
+        elif action == "0":
+            pass
 
 
 if __name__ == "__main__":
