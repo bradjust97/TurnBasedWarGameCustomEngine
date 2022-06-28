@@ -114,6 +114,7 @@ def main():
     player_clicks = []  # keeps track of player clicks (two tuples)
     valid_moves = []
     game_over = False
+    pieceIsSelected = False
 
     game_state = chess_engine.game_state()
 
@@ -122,96 +123,99 @@ def main():
             if e.type == py.QUIT:
                 running = False
             elif e.type == py.MOUSEBUTTONDOWN:
+            # -----------------------------------------------------------
                 if not game_over:
                     location = py.mouse.get_pos()
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
-                    if square_selected == (row, col):
-                        square_selected = ()
-                        player_clicks = []
-                    else:
+                    if not pieceIsSelected:
+                        if game_state.is_valid_piece(row, col):
+                            potentialPiece = game_state.get_piece(row, col)
+                            if (not game_state.has_piece_moved(potentialPiece)):
+                                print ("selected valid piece")
+                                square_selected = (row, col)
+                                player_clicks.append(square_selected)
+                                valid_moves = game_state.get_valid_moves((row, col))
+                                pieceIsSelected = True
+                                if valid_moves is None:
+                                    print("valid moves is none")
+                                    valid_moves = []
+                                    player_clicks = []
+                                    square_selected = ()
+                                    pieceIsSelected = False
+                                else: 
+                                    print("valid moves exist")
+                            else: 
+                                print("piece has already moved")
+                                square_selected = ()
+                                player_clicks = []
+                                valid_moves = [] #TODO This may be a bug to add this line double check this
+                                pieceIsSelected = False
+                        else:
+                            print("not a valid piece")
+                            square_selected = ()
+                            player_clicks = []
+                            valid_moves = [] #TODO This may be a bug to add this line double check this
+                            pieceIsSelected = False
+                    elif pieceIsSelected:
                         square_selected = (row, col)
                         player_clicks.append(square_selected)
-                    if len(player_clicks) == 2:
-                        # this if is useless right now
                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
+                            # reset the piece selected
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
+                            pieceIsSelected = False
                             print("Out of movement range")
                         else:
+                            # move piece and do postmove stuff, then reset
+                            # todo make clicking for wait actionable? or just auto resolve if only option is wait. will prob need this when selecting unit
                             movedPiece = gui_move(game_state, player_clicks)
                             options = game_state.get_postmove_options(movedPiece)
                             choose_and_execute_selected_option(options, game_state, movedPiece)
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
-
-                    else:
-                        valid_moves = game_state.get_valid_moves((row, col))
-                        if valid_moves is None:
-                            print("valid moves is none")
-                            valid_moves = []
+                            pieceIsSelected = False
+            # --------------------------------------------------------
             elif e.type == py.KEYDOWN:
                 if (e.key == py.K_e):
                     print("End turn pressed")
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
 
-        # for e in py.event.get():
-        #     if e.type == py.QUIT:
-        #         running = False
-        #     elif e.type == py.MOUSEBUTTONDOWN:
-        #         if not game_over:
-        #             location = py.mouse.get_pos()
-        #             col = location[0] // SQ_SIZE
-        #             row = location[1] // SQ_SIZE
-        #             if square_selected == (row, col):
-        #                 square_selected = ()
-        #                 player_clicks = []
-        #             else:
-        #                 square_selected = (row, col)
-        #                 player_clicks.append(square_selected)
-        #             if len(player_clicks) == 2:
-        #                 # this if is useless right now
-        #                 if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
-        #                     square_selected = ()
-        #                     player_clicks = []
-        #                     valid_moves = []
-        #                     print("Out of movement range")
-        #                 else:
-        #                     game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
-        #                                           (player_clicks[1][0], player_clicks[1][1]))
-        #                     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
-        #                     options = game_state.get_postmove_options(movedPiece)
-        #                     text = processOptions(options)
-                            
-        #                     if 1 in options:
-        #                         action = input(text)
-        #                         if action == "1":
-        #                             attackablePieces = get_pieces_within_range(movedPiece, game_state)
-        #                             for p in attackablePieces:
-        #                                 targetKilled = movedPiece.standard_attack(p)
-        #                                 if (targetKilled):
-        #                                     print(p)
-        #                                     game_state.remove_piece(p)
-        #                         elif action == "0":
-        #                             pass
+#           if not game_over:
+#                     location = py.mouse.get_pos()
+#                     col = location[0] // SQ_SIZE
+#                     row = location[1] // SQ_SIZE
+#                     if square_selected == (row, col):
+#                         square_selected = ()
+#                         player_clicks = []
+#                     else:
+#                         square_selected = (row, col)
+#                         player_clicks.append(square_selected)
+#                     if len(player_clicks) == 2:
+#                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
+#                             # reset the piece selected
+#                             square_selected = ()
+#                             player_clicks = []
+#                             valid_moves = []
+#                             print("Out of movement range")
+#                         else:
+#                             # move piece and do postmove stuff, then reset
+#                             movedPiece = gui_move(game_state, player_clicks)
+#                             options = game_state.get_postmove_options(movedPiece)
+#                             choose_and_execute_selected_option(options, game_state, movedPiece)
+#                             square_selected = ()
+#                             player_clicks = []
+#                             valid_moves = []
 
-        #                     square_selected = ()
-        #                     player_clicks = []
-        #                     valid_moves = []
-
-        #             else:
-        #                 valid_moves = game_state.get_valid_moves((row, col))
-        #                 if valid_moves is None:
-        #                     print("valid moves is none")
-        #                     valid_moves = []
-        #     elif e.type == py.KEYDOWN:
-        #         if (e.key == py.K_e):
-        #             print("End turn pressed")
-        #             game_state.end_turn()
-        #             game_state.reset_moved_pieces()
+#                     else:
+#                         #
+#                         valid_moves = game_state.get_valid_moves((row, col))
+#                         if valid_moves is None:
+#                             print("valid moves is none")
+#                             valid_moves = []
 
 
         draw_game_state(screen, game_state, valid_moves, square_selected)

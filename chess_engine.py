@@ -69,6 +69,7 @@ class game_state:
         return (evaluated_piece == Player.EMPTY)
 
     def get_valid_moves(self, starting_square):
+        # i dont trust this method
         current_row = starting_square[0]
         current_col = starting_square[1]
 
