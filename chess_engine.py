@@ -135,9 +135,14 @@ class game_state:
                 ((self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(Player.PLAYER_1)) or
                   (not self.whose_turn() and self.get_piece(current_square_row, current_square_col).is_player(Player.PLAYER_2))):
 
+            if (starting_square == ending_square):
+                self.piece_moved(self.get_piece(current_square_row, current_square_col))
+                return
+
             # The chess piece at the starting square
             moving_piece = self.get_piece(current_square_row, current_square_col)
 
+            # TODO may be unecessary if calcd via UI
             valid_moves = self.get_valid_moves(starting_square)
 
             temp = True
