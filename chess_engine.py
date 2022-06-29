@@ -181,6 +181,9 @@ class game_state:
     def whose_turn(self):
         return self.white_turn
 
+    def is_current_players_piece(self, piece):
+        return self.whose_turn() and piece.get_player() == Player.PLAYER_1
+
 
 class chess_move():
     def __init__(self, starting_square, ending_square, game_state):

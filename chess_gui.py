@@ -131,7 +131,7 @@ def main():
                     if not pieceIsSelected:
                         if game_state.is_valid_piece(row, col):
                             potentialPiece = game_state.get_piece(row, col)
-                            if (not game_state.has_piece_moved(potentialPiece)):
+                            if (not game_state.has_piece_moved(potentialPiece) and game_state.is_current_players_piece(potentialPiece)):
                                 print ("selected valid piece")
                                 square_selected = (row, col)
                                 player_clicks.append(square_selected)
@@ -146,7 +146,7 @@ def main():
                                 else: 
                                     print("valid moves exist")
                             else: 
-                                print("piece has already moved")
+                                print("piece has already moved or that is an enemy unit")
                                 square_selected = ()
                                 player_clicks = []
                                 valid_moves = [] #TODO This may be a bug to add this line double check this
@@ -173,6 +173,7 @@ def main():
                             movedPiece = gui_move(game_state, player_clicks)
                             options = game_state.get_postmove_options(movedPiece)
                             choose_and_execute_selected_option(options, game_state, movedPiece)
+                            print("moved unit")
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
@@ -183,41 +184,7 @@ def main():
                     print("End turn pressed")
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
-
-#           if not game_over:
-#                     location = py.mouse.get_pos()
-#                     col = location[0] // SQ_SIZE
-#                     row = location[1] // SQ_SIZE
-#                     if square_selected == (row, col):
-#                         square_selected = ()
-#                         player_clicks = []
-#                     else:
-#                         square_selected = (row, col)
-#                         player_clicks.append(square_selected)
-#                     if len(player_clicks) == 2:
-#                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
-#                             # reset the piece selected
-#                             square_selected = ()
-#                             player_clicks = []
-#                             valid_moves = []
-#                             print("Out of movement range")
-#                         else:
-#                             # move piece and do postmove stuff, then reset
-#                             movedPiece = gui_move(game_state, player_clicks)
-#                             options = game_state.get_postmove_options(movedPiece)
-#                             choose_and_execute_selected_option(options, game_state, movedPiece)
-#                             square_selected = ()
-#                             player_clicks = []
-#                             valid_moves = []
-
-#                     else:
-#                         #
-#                         valid_moves = game_state.get_valid_moves((row, col))
-#                         if valid_moves is None:
-#                             print("valid moves is none")
-#                             valid_moves = []
-
-
+                    
         draw_game_state(screen, game_state, valid_moves, square_selected)
 
         # endgame = game_state.checkmate_stalemate_checker()
@@ -254,6 +221,7 @@ def gui_move(game_state, player_clicks):
     game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
     (player_clicks[1][0], player_clicks[1][1]))
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+    print(movedPiece)
     return movedPiece
 
 def choose_and_execute_selected_option(options, game_state, sourcePiece):
