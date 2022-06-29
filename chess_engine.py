@@ -4,6 +4,7 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
+from operator import xor
 from Piece import Piece
 from combat_engine import get_pieces_within_range
 from enums import Player, PostmoveOptions, SquareBoard
@@ -187,7 +188,12 @@ class game_state:
         return self.white_turn
 
     def is_current_players_piece(self, piece):
-        return self.whose_turn() and piece.get_player() == Player.PLAYER_1
+        # this is NAND
+        print("whose turn:")
+        print(self.whose_turn())
+        print("whose piece:")
+        print(piece.get_player() == Player.PLAYER_1)
+        return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
 
 
 class chess_move():
