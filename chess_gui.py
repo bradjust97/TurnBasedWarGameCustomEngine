@@ -33,13 +33,14 @@ def draw_game_state(screen, game_state, valid_moves, square_selected):
         :param screen       -- the pygame screen
         :param game_state   -- the state of the current chess game
     '''
-    print("drawing new game state")
-    print(square_selected)
-    if len(square_selected) == 2:
-        print(game_state.get_piece(square_selected[0], square_selected[1]))
+    # print("drawing new game state")
+    # print(square_selected)
+    # if len(square_selected) == 2:
+    #     print(game_state.get_piece(square_selected[0], square_selected[1]))
     # square selected and game state appear to have the rook but it still doesnt show up
     draw_squares(screen)
-    highlight_square(screen, game_state, valid_moves, square_selected)
+    if (square_selected != None):
+        highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
     draw_pieces(screen, game_state)
     grayout_squares(screen, game_state)
@@ -107,6 +108,26 @@ def grayout_squares(screen, game_state):
                 s.set_alpha(100)
                 s.fill(py.Color("grey"))
                 screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+
+def redden_squares(screen, pieces):
+    for piece in pieces:
+        r = piece.get_row_number()
+        c = piece.get_col_number()
+        print(r)
+        print(c)
+        s = py.Surface((SQ_SIZE, SQ_SIZE))
+        s.set_alpha(100)
+        s.fill(py.Color("red"))
+        print("coloring red")
+        screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+    # for r in range(DIMENSION):
+    #     for c in range(DIMENSION):
+    #         piece = game_state.get_piece(r, c)
+    #         if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
+    #             s = py.Surface((SQ_SIZE, SQ_SIZE))
+    #             s.set_alpha(100)
+    #             s.fill(py.Color("grey"))
+    #             screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
 
 
 def main():
@@ -177,12 +198,10 @@ def main():
                             # move piece and do postmove stuff, then reset
                             # todo make clicking for wait actionable? or just auto resolve if only option is wait. will prob need this when selecting unit
                             movedPiece = gui_move(game_state, player_clicks)
-                            print("abc")
                             draw_game_state(screen, game_state, valid_moves, square_selected)
                             py.display.flip()
-                            print("xyz")
                             game_state.calc_and_set_postmove_options(movedPiece)
-                            choose_and_execute_selected_option(game_state, movedPiece)
+                            choose_and_execute_selected_option(game_state, movedPiece, screen)
                             print("moved unit")
                             square_selected = ()
                             player_clicks = []
@@ -234,8 +253,12 @@ def gui_move(game_state, player_clicks):
     print(movedPiece)
     return movedPiece
 
-def choose_and_execute_selected_option(game_state, sourcePiece: Piece):
+def choose_and_execute_selected_option(game_state, sourcePiece: Piece, screen):
     if sourcePiece.getPostmoveOptions().hasAttackOption():
+        print("yeesong")
+        redden_squares(screen, sourcePiece.getPostmoveOptions().getAttackableEnemies())
+        py.display.flip()
+        print("yue")
         action = input(PostmoveOptionsEnums.WAITORATTACKTEXT)
         if action == "1":
             attackablePieces = sourcePiece.getPostmoveOptions().getAttackableEnemies()
