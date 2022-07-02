@@ -26,7 +26,7 @@ def load_images():
         IMAGES[u] = py.transform.scale(py.image.load("images/advancedWars/" + u + ".png"), (SQ_SIZE, SQ_SIZE))
 
 
-def draw_game_state(screen, game_state, valid_moves, square_selected):
+def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies):
     ''' Draw the complete chess board with pieces
 
     Keyword arguments:
@@ -44,6 +44,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected):
     draw_walls(screen, game_state)
     draw_pieces(screen, game_state)
     grayout_squares(screen, game_state)
+    redden_squares(screen, currentAttackableEnemies)
 
 def draw_walls(screen, game_state):
     for r in range(DIMENSION):
@@ -142,6 +143,8 @@ def main():
     valid_moves = []
     game_over = False
     pieceIsSelected = False
+    continuePostmove = False
+    currentAttackableEnemies = []
 
     game_state = chess_engine.game_state()
 
@@ -194,19 +197,35 @@ def main():
                             valid_moves = []
                             pieceIsSelected = False
                             print("Out of movement range")
+                        elif continuePostmove:
+                            # TODO this needs to be extracted for different moves
+                            finishedOption = execute_selected_option(game_state, movedPiece, square_selected)
+                            if (finishedOption):
+                                square_selected = ()
+                                player_clicks = []
+                                valid_moves = []
+                                pieceIsSelected = False
+                                continuePostmove = False
+                                currentAttackableEnemies = []
+                            else:
+                                print("please select valid postmove attack")
                         else:
                             # move piece and do postmove stuff, then reset
                             # todo make clicking for wait actionable? or just auto resolve if only option is wait. will prob need this when selecting unit
                             movedPiece = gui_move(game_state, player_clicks)
-                            draw_game_state(screen, game_state, valid_moves, square_selected)
-                            py.display.flip()
+                            # draw_game_state(screen, game_state, valid_moves, square_selected)
+                            # py.display.flip()
                             game_state.calc_and_set_postmove_options(movedPiece)
-                            choose_and_execute_selected_option(game_state, movedPiece, screen)
-                            print("moved unit")
-                            square_selected = ()
-                            player_clicks = []
-                            valid_moves = []
-                            pieceIsSelected = False
+                            continuePostmove = movedPiece.getPostmoveOptions().hasAttackOption()
+                            # if piece has no options then just end the piece movement and reset
+                            if not continuePostmove:
+                                square_selected = ()
+                                player_clicks = []
+                                valid_moves = []
+                                pieceIsSelected = False
+                            # setup gui for user input post move
+                            else:
+                                currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
             # --------------------------------------------------------
             elif e.type == py.KEYDOWN:
                 if (e.key == py.K_e):
@@ -214,7 +233,7 @@ def main():
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
                     
-        draw_game_state(screen, game_state, valid_moves, square_selected)
+        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
         # endgame = game_state.checkmate_stalemate_checker()
         endgame = game_state.isDeadKing()
@@ -253,23 +272,25 @@ def gui_move(game_state, player_clicks):
     print(movedPiece)
     return movedPiece
 
-def choose_and_execute_selected_option(game_state, sourcePiece: Piece, screen):
-    if sourcePiece.getPostmoveOptions().hasAttackOption():
-        print("yeesong")
-        redden_squares(screen, sourcePiece.getPostmoveOptions().getAttackableEnemies())
-        py.display.flip()
-        print("yue")
-        action = input(PostmoveOptionsEnums.WAITORATTACKTEXT)
-        if action == "1":
-            attackablePieces = sourcePiece.getPostmoveOptions().getAttackableEnemies()
-            for p in attackablePieces:
-                targetKilled = sourcePiece.standard_attack(p)
-                if (targetKilled):
-                    print(p)
-                    game_state.remove_piece(p)
-        elif action == "0":
-            pass
-    sourcePiece.getPostmoveOptions().resetOptions()
+def execute_selected_option(game_state, sourcePiece: Piece, selected_square):
+    # return true if successfully executed option
+    # TODO this is only for attack, need to generalize for multiple options
+    attack = True
+    if (attack):
+        attackablePieces = sourcePiece.getPostmoveOptions().getAttackableEnemies()
+        if game_state.is_valid_piece(selected_square[0], selected_square[1]):
+            target = game_state.get_piece(selected_square[0], selected_square[1])   
+            if target in attackablePieces:
+                targetKilled = sourcePiece.standard_attack(target)
+                if targetKilled:
+                    game_state.remove_piece(target)
+                sourcePiece.getPostmoveOptions().resetOptions()
+                return True
+            else:
+                print("not a valid piece to attack")
+                return False
+        else:
+            print("not a valid square to attack")
 
 
 if __name__ == "__main__":
