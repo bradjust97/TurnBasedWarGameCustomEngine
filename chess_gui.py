@@ -32,6 +32,11 @@ def draw_game_state(screen, game_state, valid_moves, square_selected):
         :param screen       -- the pygame screen
         :param game_state   -- the state of the current chess game
     '''
+    print("drawing new game state")
+    print(square_selected)
+    if len(square_selected) == 2:
+        print(game_state.get_piece(square_selected[0], square_selected[1]))
+    # square selected and game state appear to have the rook but it still doesnt show up
     draw_squares(screen)
     highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
@@ -171,6 +176,9 @@ def main():
                             # move piece and do postmove stuff, then reset
                             # todo make clicking for wait actionable? or just auto resolve if only option is wait. will prob need this when selecting unit
                             movedPiece = gui_move(game_state, player_clicks)
+                            print("abc")
+                            draw_game_state(screen, game_state, valid_moves, square_selected)
+                            print("xyz")
                             options = game_state.get_postmove_options(movedPiece)
                             choose_and_execute_selected_option(options, game_state, movedPiece)
                             print("moved unit")

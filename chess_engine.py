@@ -188,11 +188,6 @@ class game_state:
         return self.white_turn
 
     def is_current_players_piece(self, piece):
-        # this is NAND
-        print("whose turn:")
-        print(self.whose_turn())
-        print("whose piece:")
-        print(piece.get_player() == Player.PLAYER_1)
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
 
 
