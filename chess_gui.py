@@ -178,6 +178,7 @@ def main():
                             movedPiece = gui_move(game_state, player_clicks)
                             print("abc")
                             draw_game_state(screen, game_state, valid_moves, square_selected)
+                            py.display.flip()
                             print("xyz")
                             options = game_state.get_postmove_options(movedPiece)
                             choose_and_execute_selected_option(options, game_state, movedPiece)
