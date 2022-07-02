@@ -1,10 +1,11 @@
 import enum
 from pprint import pprint
+from Piece import Piece
 import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import Player, PostmoveOptions, SquareBoard
+from enums import Player, PostmoveOptionsEnums, SquareBoard
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the chess board
@@ -180,8 +181,8 @@ def main():
                             draw_game_state(screen, game_state, valid_moves, square_selected)
                             py.display.flip()
                             print("xyz")
-                            options = game_state.get_postmove_options(movedPiece)
-                            choose_and_execute_selected_option(options, game_state, movedPiece)
+                            game_state.calc_and_set_postmove_options(movedPiece)
+                            choose_and_execute_selected_option(game_state, movedPiece)
                             print("moved unit")
                             square_selected = ()
                             player_clicks = []
@@ -233,11 +234,11 @@ def gui_move(game_state, player_clicks):
     print(movedPiece)
     return movedPiece
 
-def choose_and_execute_selected_option(options, game_state, sourcePiece):
-    if 1 in options:
-        action = input(PostmoveOptions.WAITORATTACKTEXT)
+def choose_and_execute_selected_option(game_state, sourcePiece: Piece):
+    if sourcePiece.getPostmoveOptions().hasAttackOption():
+        action = input(PostmoveOptionsEnums.WAITORATTACKTEXT)
         if action == "1":
-            attackablePieces = get_pieces_within_range(sourcePiece, game_state)
+            attackablePieces = sourcePiece.getPostmoveOptions().getAttackableEnemies()
             for p in attackablePieces:
                 targetKilled = sourcePiece.standard_attack(p)
                 if (targetKilled):
@@ -245,6 +246,7 @@ def choose_and_execute_selected_option(options, game_state, sourcePiece):
                     game_state.remove_piece(p)
         elif action == "0":
             pass
+    sourcePiece.getPostmoveOptions().resetOptions()
 
 
 if __name__ == "__main__":

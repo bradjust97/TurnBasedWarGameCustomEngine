@@ -33,7 +33,7 @@ class PawnEnums:
     MOVEMENT = 3
     NAME = 'infantry'
 
-class PostmoveOptions:
+class PostmoveOptionsEnums:
     WAIT = 0
     ATTACK = 1
     WAITORATTACKTEXT = "What would you like to do? 0 = wait 1 = attack\n"

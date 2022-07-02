@@ -4,20 +4,22 @@
 # TODO: add checking if check after moving suggested move later
 
 # General chess piece
-from enums import Player, SquareBoard
-from moveMenu import moveMenu
+from enums import Player, PostmoveOptionsEnums, SquareBoard
+from postmoveOptions import postmoveOptions
 
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player, movement=0, moveMenu = None, range=1):
+    def __init__(self, name, row_number, col_number, player, movement=0, range=1):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
         self._player = player
         self._movement = movement
-        self.moveMenu = moveMenu
         self.range = range
+        # For now assume every piece can either wait or attack. TODO change this to inherit
+        self.postmoveActions = [PostmoveOptionsEnums.WAIT, PostmoveOptionsEnums.ATTACK]
+        self.postmoveOptions = postmoveOptions()
 
     # Get the x value
     def get_row_number(self):
@@ -69,6 +71,12 @@ class Piece:
         print("Attacking target")
         killTarget = True
         return killTarget
+    
+    def getPostmoveActions(self):
+        return self.postmoveActions
+
+    def getPostmoveOptions(self):
+        return self.postmoveOptions
 
 
 

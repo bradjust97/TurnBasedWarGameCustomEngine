@@ -7,7 +7,7 @@
 from operator import xor
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import Player, PostmoveOptions, SquareBoard
+from enums import Player, PostmoveOptionsEnums, SquareBoard
 from startingBoards.advancedWarsChess import advancedWarsChess
 
 '''
@@ -174,14 +174,16 @@ class game_state:
         if defenderDied:
             self.remove_piece(defender)
     
-    def get_postmove_options(self, piece):
-        options = [PostmoveOptions.WAIT]
+    def calc_and_set_postmove_options(self, piece):
+        #options = [PostmoveOptions.WAIT]
+        postmoveOptionsObject = piece.getPostmoveOptions()
         attackableEnemies = get_pieces_within_range(piece, self) 
         # TODO eventually abstract all detection methods on determining if an option is available or not
         if (len(attackableEnemies) != 0):
-            options.append(PostmoveOptions.ATTACK)
-        print("Returning postmove options")
-        return options
+            postmoveOptionsObject.appendOption(PostmoveOptionsEnums.ATTACK)
+            postmoveOptionsObject.setAttackableEnemies(attackableEnemies)
+        # print("Returning postmove options")
+        # return postmoveOptionsObject
 
     # true if white, false if black
     def whose_turn(self):
