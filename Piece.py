@@ -11,13 +11,14 @@ from combatModifiers import modifierDict
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player, movement=0, range=1, health=100):
+    def __init__(self, name, row_number, col_number, player, movement=0, maxRange=1, minRange=1, health=100):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
         self._player = player
         self._movement = movement
-        self.range = range
+        self.maxRange = maxRange
+        self.minRange = minRange
         # For now assume every piece can either wait or attack. TODO change this to inherit
         self.postmoveActions = [PostmoveOptionsEnums.WAIT, PostmoveOptionsEnums.ATTACK]
         self.postmoveOptions = postmoveOptions()
@@ -41,8 +42,11 @@ class Piece:
     def get_movement(self):
         return self._movement
 
-    def get_range(self):
-        return self.range
+    def get_maxRange(self):
+        return self.maxRange
+    
+    def get_minRange(self):
+        return self.minRange
 
     def is_player(self, player_checked):
         return self.get_player() == player_checked

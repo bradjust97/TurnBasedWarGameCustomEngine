@@ -4,14 +4,15 @@ from enums import Player
 
 
 def get_pieces_within_range(piece, game_state):
-    row_change = list(range(piece.get_range() * -1, piece.get_range() + 1))
-    col_change = list(range(piece.get_range() * -1, piece.get_range() + 1))
+    row_change = list(range(piece.get_maxRange() * -1, piece.get_maxRange() + 1))
+    col_change = list(range(piece.get_maxRange() * -1, piece.get_maxRange() + 1))
+
     square = list(itertools.product(row_change, col_change))
     diamond = []
     attackableEnemyPieces = []
     for move in square:
         # restrict movement with no diags
-        if (abs(move[0]) + abs(move[1])) <= piece.get_range():
+        if (abs(move[0]) + abs(move[1])) <= piece.get_maxRange() and (abs(move[0]) + abs(move[1])) >= piece.get_minRange():
             diamond.append(move)
 
     for i in range(0, len(diamond)):
