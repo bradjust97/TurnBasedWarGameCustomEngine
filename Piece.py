@@ -10,7 +10,7 @@ from postmoveOptions import postmoveOptions
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player, movement=0, range=1, health=10):
+    def __init__(self, name, row_number, col_number, player, movement=0, range=1, health=100):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
@@ -71,7 +71,7 @@ class Piece:
     def standard_attack(self, target):
         killTarget = False
         print("Attacking target")
-        target.loseHealth(5)
+        target.loseHealth(50)
         print("Target is at hp:" + str(target.getHealth()))
         if target.isDead(): 
             killTarget = True
