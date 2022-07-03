@@ -37,7 +37,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     # print(square_selected)
     # if len(square_selected) == 2:
     #     print(game_state.get_piece(square_selected[0], square_selected[1]))
-    # square selected and game state appear to have the rook but it still doesnt show up
+    # square selected and game state appear to have the knight but it still doesnt show up
     draw_squares(screen)
     if (square_selected != None):
         highlight_square(screen, game_state, valid_moves, square_selected)

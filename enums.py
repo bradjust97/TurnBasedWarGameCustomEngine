@@ -5,7 +5,10 @@ class Player:
     WALL = -8
     PIECES = ['white_r', 'white_n', 'white_q', 'white_k', 'white_p',
               'black_r', 'black_n', 'black_q', 'black_k', 'black_p']
-    UNITS = ['white_recon', 'black_recon', 'black_tank', 'white_infantry', 'black_infantry', 'white_king', 'white_queen','black_king', 'black_queen', 'white_tank', 'black_tank', 'white_artillery', 'black_artillery']
+    UNITS = ['white_recon', 'black_recon', 'black_tank', 'white_tank',
+             'white_infantry', 'black_infantry', 'white_king', 'black_king', 
+             'white_queen', 'black_queen', 'white_artillery', 'black_artillery',
+             'white_archer', 'black_archer']
 
 
 class SquareBoard: # assume square for now
@@ -17,21 +20,49 @@ class KingEnums:
     MOVEMENT = 1
     NAME = 'king'
 
-class RookEnums:
+class KnightEnums:
     MOVEMENT = 6
     NAME = 'tank'
 
-class BishopEnums:
+class ScoutCavalryEnums:
     MOVEMENT = 8
     NAME = 'recon'
 
-class KnightEnums:
+class CatapultEnums:
     MOVEMENT = 4
     NAME = 'artillery' 
 
-class PawnEnums:
+class FootmanEnums:
     MOVEMENT = 3
     NAME = 'infantry'
+
+class ArcherEnums:
+    MOVEMENT = 2
+    NAME = 'archer'
+
+class WagonerEnums:
+    MOVEMENT = 5
+    NAME = 'wagoner'
+
+class LancerEnums:
+    MOVEMENT = 7
+    NAME = 'lancer'
+
+class NobleEnums:
+    MOVEMENT = 9
+    NAME = 'noble'
+
+class TrebuchetEnums:
+    MOVEMENT = 7
+    NAME = 'trebuchet'
+
+class BallistaEnums:
+    MOVEMENT = 7
+    NAME = 'ballista'
+
+class HuntsmanEnums:
+    MOVEMENT = 7
+    NAME = 'huntsman'
 
 class PostmoveOptionsEnums:
     WAIT = 0

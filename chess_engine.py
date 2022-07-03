@@ -206,11 +206,11 @@ class chess_move():
         else:
             self.removed_piece = Player.EMPTY
 
-        self.rook_starting_square = None
-        self.rook_ending_square = None
-        self.moving_rook = None
+        self.knight_starting_square = None
+        self.knight_ending_square = None
+        self.moving_knight = None
 
-        self.pawn_promoted = False
+        self.footman_promoted = False
         self.replacement_piece = None
 
     def get_moving_piece(self):

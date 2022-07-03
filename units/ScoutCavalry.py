@@ -1,18 +1,17 @@
-# Bishop
 from Piece import Piece
-from enums import BishopEnums, Player, SquareBoard
+from enums import ScoutCavalryEnums, Player, SquareBoard
 from movement_engine import blocked_movement_diamond, make_movement_diamond
 
 
-class Bishop(Piece):
+class ScoutCavalry(Piece):
     def __init__(self, row_number, col_number, player):
-        name = BishopEnums.NAME
-        movement = BishopEnums.MOVEMENT
+        name = ScoutCavalryEnums.NAME
+        movement = ScoutCavalryEnums.MOVEMENT
         super().__init__(name, row_number, col_number, player, movement)
 
     def get_valid_piece_takes(self, game_state):
         _moves = []
-        possible_moves = make_movement_diamond(BishopEnums.MOVEMENT)
+        possible_moves = make_movement_diamond(ScoutCavalryEnums.MOVEMENT)
 
         for i in range(0, len(possible_moves)):
             new_row = self.get_row_number() + possible_moves[i][0]
@@ -30,7 +29,7 @@ class Bishop(Piece):
 
     def get_valid_peaceful_moves(self, game_state):
         _moves = []
-        possible_moves = make_movement_diamond(BishopEnums.MOVEMENT)
+        possible_moves = make_movement_diamond(ScoutCavalryEnums.MOVEMENT)
 
         # list(itertools.product(row_change, col_change))
         for i in range(0, len(possible_moves)):
@@ -44,7 +43,7 @@ class Bishop(Piece):
         return _moves
 
     def get_valid_piece_moves(self, game_state):
-        return blocked_movement_diamond(BishopEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)
+        return blocked_movement_diamond(ScoutCavalryEnums.MOVEMENT, self.get_row_number(), self.get_col_number(), game_state)
         #return self.get_valid_peaceful_moves(game_state) + self.get_valid_piece_takes(game_state)
 
     # def traverse(self, game_state):
@@ -70,7 +69,7 @@ class Bishop(Piece):
     #         else:
     #             self._breaking_point = True
 
-    #     # Right up of the bishop
+    #     # Right up of the ScoutCavalry
     #     self._breaking_point = False
     #     self._up = 1
     #     self._down = 1
@@ -90,7 +89,7 @@ class Bishop(Piece):
     #         else:
     #             self._breaking_point = True
 
-    #     # Down left of the bishop
+    #     # Down left of the ScoutCavalry
     #     self._breaking_point = False
     #     self._up = 1
     #     self._down = 1
@@ -110,7 +109,7 @@ class Bishop(Piece):
     #         else:
     #             self._breaking_point = True
 
-    #     # Down right of the bishop
+    #     # Down right of the ScoutCavalry
     #     self._breaking_point = False
     #     self._up = 1
     #     self._down = 1
