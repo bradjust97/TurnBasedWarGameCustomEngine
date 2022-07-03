@@ -114,12 +114,9 @@ def redden_squares(screen, pieces):
     for piece in pieces:
         r = piece.get_row_number()
         c = piece.get_col_number()
-        print(r)
-        print(c)
         s = py.Surface((SQ_SIZE, SQ_SIZE))
         s.set_alpha(100)
         s.fill(py.Color("red"))
-        print("coloring red")
         screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
     # for r in range(DIMENSION):
     #     for c in range(DIMENSION):

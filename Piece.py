@@ -10,7 +10,7 @@ from postmoveOptions import postmoveOptions
 
 class Piece:
     # Initialize the piece
-    def __init__(self, name, row_number, col_number, player, movement=0, range=1):
+    def __init__(self, name, row_number, col_number, player, movement=0, range=1, health=10):
         self._name = name
         self.row_number = row_number
         self.col_number = col_number
@@ -20,6 +20,7 @@ class Piece:
         # For now assume every piece can either wait or attack. TODO change this to inherit
         self.postmoveActions = [PostmoveOptionsEnums.WAIT, PostmoveOptionsEnums.ATTACK]
         self.postmoveOptions = postmoveOptions()
+        self.health = health
 
     # Get the x value
     def get_row_number(self):
@@ -68,15 +69,37 @@ class Piece:
         pass
 
     def standard_attack(self, target):
+        killTarget = False
         print("Attacking target")
-        killTarget = True
-        return killTarget
+        target.loseHealth(5)
+        print("Target is at hp:" + str(target.getHealth()))
+        if target.isDead(): 
+            killTarget = True
+            return killTarget
+        else:
+            return killTarget
+
     
     def getPostmoveActions(self):
         return self.postmoveActions
 
     def getPostmoveOptions(self):
         return self.postmoveOptions
+    
+    def getHealth(self):
+        return self.health
+    
+    def loseHealth(self, hp):
+        self.health -= hp
+    
+    def gainHealth(self, hp):
+        self.health += hp
+    
+    def isDead(self):
+        return self.health <= 0
+
+    def isAlive(self):
+        return not self.isDead
 
 
 
