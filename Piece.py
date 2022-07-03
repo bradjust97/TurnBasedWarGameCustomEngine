@@ -6,6 +6,7 @@
 # General chess piece
 from enums import Player, PostmoveOptionsEnums, SquareBoard
 from postmoveOptions import postmoveOptions
+from combatModifiers import modifierDict
 
 
 class Piece:
@@ -71,7 +72,16 @@ class Piece:
     def standard_attack(self, target):
         killTarget = False
         print("Attacking target")
-        target.loseHealth(50)
+        attackerHealth = self.getHealth()
+        print("health of attacker")
+        print(attackerHealth)
+        attackerModifier = modifierDict[self.get_name()][target.get_name()]
+        print("attackerModifier")
+        print(attackerModifier)
+        hpLoss = (attackerHealth * .01) * attackerModifier
+        print("hpLoss")
+        print(hpLoss)
+        target.loseHealth(hpLoss)
         print("Target is at hp:" + str(target.getHealth()))
         if target.isDead(): 
             killTarget = True
