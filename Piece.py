@@ -85,9 +85,8 @@ class Piece:
         print("Target is at hp:" + str(target.getHealth()))
         if target.isDead(): 
             killTarget = True
-            return killTarget
-        else:
-            return killTarget
+        return killTarget
+
 
     
     def getPostmoveActions(self):

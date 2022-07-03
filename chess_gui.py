@@ -278,9 +278,7 @@ def execute_selected_option(game_state, sourcePiece: Piece, selected_square):
         if game_state.is_valid_piece(selected_square[0], selected_square[1]):
             target = game_state.get_piece(selected_square[0], selected_square[1])   
             if target in attackablePieces:
-                targetKilled = sourcePiece.standard_attack(target)
-                if targetKilled:
-                    game_state.remove_piece(target)
+                game_state.attack_piece(sourcePiece, target)
                 sourcePiece.getPostmoveOptions().resetOptions()
                 return True
             else:
