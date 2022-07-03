@@ -32,6 +32,7 @@ class ScoutCavalryEnums:
 class CatapultEnums:
     MOVEMENT = 4
     NAME = 'catapult' 
+    RANGE = 4
 
 class FootmanEnums:
     MOVEMENT = 3

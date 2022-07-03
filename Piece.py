@@ -87,7 +87,6 @@ class Piece:
             killTarget = True
         return killTarget
 
-
     
     def getPostmoveActions(self):
         return self.postmoveActions

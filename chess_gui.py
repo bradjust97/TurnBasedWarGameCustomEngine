@@ -269,7 +269,7 @@ def gui_move(game_state, player_clicks):
     print(movedPiece)
     return movedPiece
 
-def execute_selected_option(game_state, sourcePiece: Piece, selected_square):
+def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Piece, selected_square):
     # return true if successfully executed option
     # TODO this is only for attack, need to generalize for multiple options
     attack = True

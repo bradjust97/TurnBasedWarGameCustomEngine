@@ -8,7 +8,8 @@ class Catapult(Piece):
     def __init__(self, row_number, col_number, player):
         name = CatapultEnums.NAME
         movement = CatapultEnums.MOVEMENT
-        super().__init__(name, row_number, col_number, player, movement)
+        range = CatapultEnums.RANGE
+        super().__init__(name, row_number, col_number, player, movement, range)
 
     def get_valid_piece_takes(self, game_state):
         _moves = []
