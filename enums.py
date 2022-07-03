@@ -5,10 +5,11 @@ class Player:
     WALL = -8
     PIECES = ['white_r', 'white_n', 'white_q', 'white_k', 'white_p',
               'black_r', 'black_n', 'black_q', 'black_k', 'black_p']
-    UNITS = ['white_recon', 'black_recon', 'black_tank', 'white_tank',
-             'white_infantry', 'black_infantry', 'white_king', 'black_king', 
-             'white_queen', 'black_queen', 'white_artillery', 'black_artillery',
-             'white_archer', 'black_archer']
+    UNITS = ['white_scoutCavalry', 'black_scoutCavalry', 'black_knight', 'white_knight',
+             'white_footman', 'black_footman', 'white_king', 'black_king', 
+             'white_queen', 'black_queen', 'white_catapult', 'black_catapult']
+             # No images for:
+             # 'white_archer', 'black_archer', and more
 
 
 class SquareBoard: # assume square for now
@@ -22,19 +23,19 @@ class KingEnums:
 
 class KnightEnums:
     MOVEMENT = 6
-    NAME = 'tank'
+    NAME = 'knight'
 
 class ScoutCavalryEnums:
     MOVEMENT = 8
-    NAME = 'recon'
+    NAME = 'scoutCavalry'
 
 class CatapultEnums:
     MOVEMENT = 4
-    NAME = 'artillery' 
+    NAME = 'catapult' 
 
 class FootmanEnums:
     MOVEMENT = 3
-    NAME = 'infantry'
+    NAME = 'footman'
 
 class ArcherEnums:
     MOVEMENT = 2
