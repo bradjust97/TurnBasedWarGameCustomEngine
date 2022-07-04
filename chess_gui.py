@@ -224,6 +224,12 @@ def main():
             elif e.type == py.KEYDOWN:
                 if (e.key == py.K_e):
                     print("End turn pressed")
+                    square_selected = ()
+                    player_clicks = []
+                    valid_moves = []
+                    pieceIsSelected = False
+                    continuePostmove = False
+                    currentAttackableEnemies = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
                     
