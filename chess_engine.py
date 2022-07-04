@@ -29,12 +29,8 @@ class game_state:
     def __init__(self):
         # The board is a 2D array
         # TODO: Change to a numpy format later
-        self.white_captives = []
-        self.black_captives = []
         self.move_log = []
         self.white_turn = True
-        self.checkmate = False
-        self.stalemate = False
         self.white_is_dead = False
         self.black_is_dead = False
 
@@ -91,21 +87,6 @@ class game_state:
     def reset_moved_pieces(self):
         print("Reseting moved pieces")
         self.moved_pieces = []
-
-    # 0 if white lost, 1 if black lost, 2 if stalemate, 3 if not game over
-    def checkmate_stalemate_checker(self):
-        all_white_moves = self.get_all_legal_moves(Player.PLAYER_1)
-        all_black_moves = self.get_all_legal_moves(Player.PLAYER_2)
-        if self.whose_turn() and not all_white_moves:
-            print("white lost")
-            return 0
-        elif not self.whose_turn() and not all_black_moves:
-            print("black lost")
-            return 1
-        elif not all_white_moves and not all_black_moves:
-            return 2
-        else:
-            return 3
     
     def isDeadKing(self):
         if self.white_is_dead:

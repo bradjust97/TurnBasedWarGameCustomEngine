@@ -251,7 +251,6 @@ def main():
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
-        # endgame = game_state.checkmate_stalemate_checker()
         endgame = game_state.isDeadKing()
         if endgame == 0:
             game_over = True
