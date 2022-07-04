@@ -208,11 +208,8 @@ def main():
                                 print("please select valid postmove attack")
                         else:
                             # move piece and do postmove stuff, then reset
-                            # todo make clicking for wait actionable? or just auto resolve if only option is wait. will prob need this when selecting unit
-                            movedPiece = gui_move(game_state, player_clicks)
-                            # draw_game_state(screen, game_state, valid_moves, square_selected)
-                            # py.display.flip()
-                            game_state.calc_and_set_postmove_options(movedPiece)
+                            (movedPiece, movedSameSpot) = gui_move(game_state, player_clicks)
+                            game_state.calc_and_set_postmove_options(movedPiece, movedSameSpot)
                             continuePostmove = movedPiece.getPostmoveOptions().hasAttackOption()
                             # if piece has no options then just end the piece movement and reset
                             if not continuePostmove:
@@ -263,11 +260,11 @@ def processOptions(options):
     return "What would you like to do? 0 = wait 1 = attack\n"
 
 def gui_move(game_state, player_clicks):
-    game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
+    movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
     (player_clicks[1][0], player_clicks[1][1]))
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
     print(movedPiece)
-    return movedPiece
+    return (movedPiece, movedSameSpot)
 
 def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Piece, selected_square):
     # return true if successfully executed option

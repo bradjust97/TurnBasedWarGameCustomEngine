@@ -5,6 +5,7 @@
 # Note: move log class inspired by Eddie Sharick
 #
 from operator import xor
+from xmlrpc.client import boolean
 from Piece import Piece
 from combat_engine import get_pieces_within_range
 from enums import Player, PostmoveOptionsEnums, SquareBoard
@@ -124,7 +125,7 @@ class game_state:
                         _all_valid_moves.append(((row, col), move))
         return _all_valid_moves
 
-    # Move a piece
+    # Move a piece. Returns true is moved to the same spot it started
     def move_piece(self, starting_square, ending_square):
         current_square_row = starting_square[0]  # The integer row value of the starting square
         current_square_col = starting_square[1]  # The integer col value of the starting square
@@ -138,7 +139,7 @@ class game_state:
 
             if (starting_square == ending_square):
                 self.piece_moved(self.get_piece(current_square_row, current_square_col))
-                return
+                return True
 
             # The chess piece at the starting square
             moving_piece = self.get_piece(current_square_row, current_square_col)
@@ -165,21 +166,23 @@ class game_state:
 
                 self.piece_moved(moving_piece)
                 #self.white_turn = not self.white_turn
-
+                return False
             else:
-                pass
+                return False
     
     def attack_piece(self, attacker: Piece, defender: Piece):
         defenderDied = attacker.standard_attack(defender)
         if defenderDied:
             self.remove_piece(defender)
     
-    def calc_and_set_postmove_options(self, piece):
+    def calc_and_set_postmove_options(self, piece : Piece, movedSameSpot):
         #options = [PostmoveOptions.WAIT]
         postmoveOptionsObject = piece.getPostmoveOptions()
         attackableEnemies = get_pieces_within_range(piece, self) 
+        rangedUnitMoved = not movedSameSpot and (piece.get_maxRange() >= 2)
         # TODO eventually abstract all detection methods on determining if an option is available or not
-        if (len(attackableEnemies) != 0):
+        if (len(attackableEnemies) != 0 and not rangedUnitMoved):
+            print("meesong")
             postmoveOptionsObject.appendOption(PostmoveOptionsEnums.ATTACK)
             postmoveOptionsObject.setAttackableEnemies(attackableEnemies)
         # print("Returning postmove options")
