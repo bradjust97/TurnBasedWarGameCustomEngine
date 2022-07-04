@@ -1,5 +1,6 @@
 import enum
 from pprint import pprint
+from units.Footman import Footman
 from Piece import Piece
 import chess_engine
 import pygame as py
@@ -142,6 +143,7 @@ def main():
     pieceIsSelected = False
     continuePostmove = False
     currentAttackableEnemies = []
+    godmode = False
 
     game_state = chess_engine.game_state()
 
@@ -151,7 +153,14 @@ def main():
                 running = False
             elif e.type == py.MOUSEBUTTONDOWN:
             # -----------------------------------------------------------
-                if not game_over:
+                if godmode:
+                    location = py.mouse.get_pos()
+                    col = location[0] // SQ_SIZE
+                    row = location[1] // SQ_SIZE
+                    footman = Footman(row, col, Player.PLAYER_1)
+                    # TODO this should really have its own method
+                    game_state.board[row][col] = footman
+                elif not game_over:
                     location = py.mouse.get_pos()
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
@@ -232,6 +241,13 @@ def main():
                     currentAttackableEnemies = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
+                elif (e.key == py.K_g):
+                    godmode = not godmode
+                    if godmode:
+                        print("WARNING: GODMODE ENABLED")
+                    else:
+                        print("GODMODE DISABLED")
+
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
