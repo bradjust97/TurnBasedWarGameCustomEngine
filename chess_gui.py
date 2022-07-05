@@ -44,6 +44,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
         highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
     draw_pieces(screen, game_state)
+    draw_unit_healths(screen, game_state)
     grayout_squares(screen, game_state)
     redden_squares(screen, currentAttackableEnemies)
 
@@ -247,18 +248,25 @@ def main():
                         print("WARNING: GODMODE ENABLED")
                     else:
                         print("GODMODE DISABLED")
+                # debug function
+                elif (e.key == py.K_x):
+                    print("x")
+                    # font = py.font.SysFont("Helvitca", 32, True, False)
+                    # text_object = font.render("1", False, py.Color("Red"))
+                    # text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(5,5)
+                    # screen.blit(text_object, text_location)
 
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
         endgame = game_state.isDeadKing()
-        if endgame == 0:
+        if endgame == 0 or game_over:
             game_over = True
             draw_text(screen, "Black wins.")
-        elif endgame == 1:
+        elif endgame == 1 or game_over:
             game_over = True
             draw_text(screen, "White wins.")
-        elif endgame == 2:
+        elif endgame == 2 or game_over:
             game_over = True
             draw_text(screen, "Stalemate.")
 
@@ -271,6 +279,22 @@ def draw_text(screen, text):
     text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
                                                       HEIGHT / 2 - text_object.get_height() / 2)
     screen.blit(text_object, text_location)
+
+def draw_unit_healths(screen, game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            piece = game_state.get_piece(r, c)
+            if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
+                hp = piece.getHealth()
+                if  hp < 100:
+                    print("draw hp")
+                    # TODO 512 is the width and height and scale it based on board BITCH
+                    font = py.font.SysFont("Helvitca", 32, True, False)
+                    text_object = font.render("1", False, py.Color("Red"))
+                    text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(5,5)
+                    # text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
+                    #                                                 HEIGHT / 2 - text_object.get_height() / 2)
+                    screen.blit(text_object, text_location)
 
 def processOptions(options):
     # if 0 in options:
