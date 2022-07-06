@@ -301,7 +301,7 @@ def draw_unit_healths(screen, game_state):
                     font = py.font.SysFont("Helvitca", 32, True, False)
                     hp = hp / 10
                     hpText = str(math.ceil(hp))
-                    text_object = font.render(hpText, True, py.Color("Black")) 
+                    text_object = font.render(hpText, True, py.Color("Green")) 
                     screen.blit(text_object, pixelLocation)
 
 def processOptions(options):
