@@ -1,10 +1,11 @@
-from enums import Player, SquareBoard
+from enums import Player, RoadEnums, SquareBoard, TerrainEnums
+from terrain.Terrain import Terrain
 from units.King import King
 from units.ScoutCavalry import ScoutCavalry
 from units.Catapult import Catapult
 from units.Knight import Knight
 from units.Footman import Footman
-
+import random
 
 white_knight_1 = Knight(0, 0, Player.PLAYER_1)
 white_catapult_1 = Catapult(0, 1, Player.PLAYER_1)
@@ -62,7 +63,18 @@ for piece in white_pieces:
 for piece in black_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece
 
+terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, x, y) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
+
+possibleTerrains = [TerrainEnums.PLAINS, TerrainEnums.FOREST, TerrainEnums.MOUNTAIN]
+
+for i in range(SquareBoard.DIMENSIONS):
+    for j in range(SquareBoard.DIMENSIONS):
+        if i > 2 and i < SquareBoard.DIMENSIONS - 3:
+             choiceTerrainEnums = random.choice(possibleTerrains)
+             terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j)
+
 class advancedWarsChess:
     white_pieces = white_pieces
     black_pieces = black_pieces
     board = board
+    terrain = terrainMap

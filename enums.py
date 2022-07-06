@@ -76,3 +76,29 @@ class PostmoveOptionsEnums:
     ATTACK = 1
     WAITORATTACKTEXT = "What would you like to do? 0 = wait 1 = attack\n"
 
+class RoadEnums:
+    NAME = 'road'
+    DEFENSEBONUS = 0
+    MOVEMENTPENALTY = 0
+
+class PlainsEnums:
+    NAME = 'plains'
+    DEFENSEBONUS = 0
+    MOVEMENTPENALTY = 0
+
+class ForestEnums:
+    NAME = 'forest'
+    DEFENSEBONUS = 0
+    MOVEMENTPENALTY = 0
+
+class MountainEnums:
+    NAME = 'mountain'
+    DEFENSEBONUS = 0
+    MOVEMENTPENALTY = 0
+
+class TerrainEnums:
+    TYPES = [RoadEnums.NAME, PlainsEnums.NAME, ForestEnums.NAME, MountainEnums.NAME]
+    ROAD = RoadEnums
+    PLAINS = PlainsEnums
+    FOREST = ForestEnums
+    MOUNTAIN = MountainEnums

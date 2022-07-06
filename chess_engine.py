@@ -37,9 +37,8 @@ class game_state:
         self._white_king_location = [0, 3]
         self._black_king_location = [7, 3]
 
-        self.white_pieces = advancedWarsChess.white_pieces
-        self.black_pieces = advancedWarsChess.black_pieces
         self.board = advancedWarsChess.board
+        self.terrain = advancedWarsChess.terrain
         self.moved_pieces = [] 
 
     def end_turn(self):
@@ -49,6 +48,10 @@ class game_state:
     def get_piece(self, row, col):
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.board[row][col]
+    
+    def get_terrain(self, row, col):
+        if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
+            return self.terrain[row][col]
     
     def remove_piece(self, piece):
         self.board[piece.get_row_number()][piece.get_col_number()] = Player.EMPTY
@@ -73,6 +76,8 @@ class game_state:
 
         if self.is_valid_piece(current_row, current_col):
             moving_piece = self.get_piece(current_row, current_col)
+            print("TESTTESTTESTST")
+            print(moving_piece)
             initial_valid_piece_moves = moving_piece.get_valid_piece_moves(self)
             return initial_valid_piece_moves
         else:

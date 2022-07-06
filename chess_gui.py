@@ -7,7 +7,7 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import Player, PostmoveOptionsEnums, SquareBoard
+from enums import Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the chess board
@@ -17,6 +17,7 @@ SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations
 IMAGES = {}  # images for the chess pieces
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
+TERRAINIMAGES = {}
 
 def load_images():
     '''
@@ -26,7 +27,8 @@ def load_images():
         IMAGES[p] = py.transform.scale(py.image.load("images/" + p + ".png"), (SQ_SIZE, SQ_SIZE))
     for u in Player.UNITS:
         IMAGES[u] = py.transform.scale(py.image.load("images/advancedWars/" + u + ".png"), (SQ_SIZE, SQ_SIZE))
-
+    for tName in TerrainEnums.TYPES:
+        TERRAINIMAGES[tName] = py.transform.scale(py.image.load("images/terrain/" + tName + ".png"), (SQ_SIZE, SQ_SIZE))
 
 def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies):
     ''' Draw the complete chess board with pieces
@@ -44,6 +46,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     if (square_selected != None):
         highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
+    draw_terrain(screen, game_state)
     draw_pieces(screen, game_state)
     draw_unit_healths(screen, game_state)
     grayout_squares(screen, game_state)
@@ -66,6 +69,14 @@ def draw_squares(screen):
         for c in range(DIMENSION):
             color = colors[(r + c) % 2]
             py.draw.rect(screen, color, py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+def draw_terrain(screen, game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            terrain = game_state.get_terrain(r, c)
+            if terrain is not None:
+                screen.blit(TERRAINIMAGES[terrain.getTerrain()],
+                            py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
 def draw_pieces(screen, game_state):
@@ -248,7 +259,7 @@ def main():
                     if godmode:
                         print("WARNING: GODMODE ENABLED")
                     else:
-                        print("GODMODE DISABLED")
+                        print("godmode disabled, phew...")
                 # debug function
                 elif (e.key == py.K_x):
                     print("x")
