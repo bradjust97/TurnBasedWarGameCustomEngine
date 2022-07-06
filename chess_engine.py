@@ -49,6 +49,23 @@ class game_state:
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.board[row][col]
     
+    # Technically dont need self
+    def areAdjacent(self, piece1, piece2):
+        r1 = piece1.get_row_number()
+        c1 = piece1.get_col_number()
+        r2 = piece2.get_row_number()
+        c2 = piece2.get_col_number()
+
+        # if they are the same row, then columns need to be adjacent
+        if r1 == r2:
+            if abs(c1 - c2) == 1:
+                return True
+        elif c1 == c2:
+            if abs(c1 - c2) == 1:
+                return True
+        else:
+            return False
+    
     def get_terrain(self, row, col):
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.terrain[row][col]
@@ -76,8 +93,6 @@ class game_state:
 
         if self.is_valid_piece(current_row, current_col):
             moving_piece = self.get_piece(current_row, current_col)
-            print("TESTTESTTESTST")
-            print(moving_piece)
             initial_valid_piece_moves = moving_piece.get_valid_piece_moves(self)
             return initial_valid_piece_moves
         else:
@@ -157,13 +172,20 @@ class game_state:
                 return False
     
     def attack_piece(self, attacker: Piece, defender: Piece):
-        print("row col:")
-        print(defender.get_row_number())
-        print(defender.get_col_number())
         defenderTerrainDefenseValue = self.get_terrain(defender.get_row_number(), defender.get_col_number()).getDefenseBonus()
         defenderDied = attacker.standard_attack(defender, defenderTerrainDefenseValue)
+        attackerDied = False
         if defenderDied:
+            print("Defended died")
             self.remove_piece(defender)
+        # Check for counterattack
+        elif self.areAdjacent(attacker, defender) and defender.get_minRange() == 1:
+            attackerTerrainDefenseValue = self.get_terrain(attacker.get_row_number(), attacker.get_col_number()).getDefenseBonus()
+            attackerDied = defender.standard_attack(attacker, attackerTerrainDefenseValue)
+
+        if attackerDied:
+            print("Attacker died")
+            self.remove_piece(attacker)
     
     def calc_and_set_postmove_options(self, piece : Piece, movedSameSpot):
         #options = [PostmoveOptions.WAIT]
