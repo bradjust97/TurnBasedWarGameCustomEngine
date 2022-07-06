@@ -157,7 +157,11 @@ class game_state:
                 return False
     
     def attack_piece(self, attacker: Piece, defender: Piece):
-        defenderDied = attacker.standard_attack(defender)
+        print("row col:")
+        print(defender.get_row_number())
+        print(defender.get_col_number())
+        defenderTerrainDefenseValue = self.get_terrain(defender.get_row_number(), defender.get_col_number()).getDefenseBonus()
+        defenderDied = attacker.standard_attack(defender, defenderTerrainDefenseValue)
         if defenderDied:
             self.remove_piece(defender)
     

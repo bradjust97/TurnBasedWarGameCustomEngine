@@ -43,10 +43,10 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     #     print(game_state.get_piece(square_selected[0], square_selected[1]))
     # square selected and game state appear to have the knight but it still doesnt show up
     draw_squares(screen)
-    if (square_selected != None):
-        highlight_square(screen, game_state, valid_moves, square_selected)
     draw_walls(screen, game_state)
     draw_terrain(screen, game_state)
+    if (square_selected != None):
+        highlight_square(screen, game_state, valid_moves, square_selected)
     draw_pieces(screen, game_state)
     draw_unit_healths(screen, game_state)
     grayout_squares(screen, game_state)
@@ -311,7 +311,7 @@ def draw_unit_healths(screen, game_state):
                     pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
                     font = py.font.SysFont("Helvitca", 32, True, False)
                     hp = hp / 10
-                    hpText = str(math.ceil(hp))
+                    hpText = str(math.floor(hp))
                     text_object = font.render(hpText, True, py.Color("Green")) 
                     screen.blit(text_object, pixelLocation)
 

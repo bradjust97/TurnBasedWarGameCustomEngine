@@ -83,17 +83,17 @@ class RoadEnums:
 
 class PlainsEnums:
     NAME = 'plains'
-    DEFENSEBONUS = 0
+    DEFENSEBONUS = 1
     MOVEMENTPENALTY = 0
 
 class ForestEnums:
     NAME = 'forest'
-    DEFENSEBONUS = 0
+    DEFENSEBONUS = 2
     MOVEMENTPENALTY = 0
 
 class MountainEnums:
     NAME = 'mountain'
-    DEFENSEBONUS = 0
+    DEFENSEBONUS = 4
     MOVEMENTPENALTY = 0
 
 class TerrainEnums:

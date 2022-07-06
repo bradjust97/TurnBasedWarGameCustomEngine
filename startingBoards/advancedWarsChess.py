@@ -37,33 +37,33 @@ black_pieces = [ black_knight_2, black_catapult_2, black_scoutCavalry_2,
 
 board = [[Player.EMPTY for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
 
-board[8][10] = Player.WALL
-board[8][9] = Player.WALL
-board[8][8] = Player.WALL
-board[8][6] = Player.WALL
-board[8][5] = Player.WALL
-board[8][4] = Player.WALL
+# board[8][10] = Player.WALL
+# board[8][9] = Player.WALL
+# board[8][8] = Player.WALL
+# board[8][6] = Player.WALL
+# board[8][5] = Player.WALL
+# board[8][4] = Player.WALL
 
-board[7][10] = Player.WALL
-board[7][9] = Player.WALL
-board[7][8] = Player.WALL
-board[7][6] = Player.WALL
-board[7][5] = Player.WALL
-board[7][4] = Player.WALL
+# board[7][10] = Player.WALL
+# board[7][9] = Player.WALL
+# board[7][8] = Player.WALL
+# board[7][6] = Player.WALL
+# board[7][5] = Player.WALL
+# board[7][4] = Player.WALL
 
-board[6][10] = Player.WALL
-board[6][9] = Player.WALL
-board[6][8] = Player.WALL
-board[6][6] = Player.WALL
-board[6][5] = Player.WALL
-board[6][4] = Player.WALL
+# board[6][10] = Player.WALL
+# board[6][9] = Player.WALL
+# board[6][8] = Player.WALL
+# board[6][6] = Player.WALL
+# board[6][5] = Player.WALL
+# board[6][4] = Player.WALL
 
 for piece in white_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece
 for piece in black_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece
 
-terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, x, y) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
+terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, x, y, TerrainEnums.ROAD.DEFENSEBONUS, TerrainEnums.ROAD.MOVEMENTPENALTY) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
 
 possibleTerrains = [TerrainEnums.PLAINS, TerrainEnums.FOREST, TerrainEnums.MOUNTAIN]
 
@@ -71,7 +71,7 @@ for i in range(SquareBoard.DIMENSIONS):
     for j in range(SquareBoard.DIMENSIONS):
         if i > 2 and i < SquareBoard.DIMENSIONS - 3:
              choiceTerrainEnums = random.choice(possibleTerrains)
-             terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j)
+             terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j, choiceTerrainEnums.DEFENSEBONUS)
 
 class advancedWarsChess:
     white_pieces = white_pieces

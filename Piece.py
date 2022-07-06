@@ -73,20 +73,32 @@ class Piece:
     def get_valid_piece_moves(self, board):
         pass
 
-    def standard_attack(self, target):
+    def standard_attack(self, target, terrainDefense=0):
         killTarget = False
+        print("_____________________")
         print("Attacking target")
-        attackerHealth = self.getHealth()
-        print("health of attacker")
-        print(attackerHealth)
+        attackerHP = self.getHealth() / 10
+        print("hp of attacker")
+        print(attackerHP)
         attackerModifier = modifierDict[self.get_name()][target.get_name()]
+        print("terrainDefense")
+        print(terrainDefense)
+        print("starting hp of attacker")
+        print(attackerHP)
+        print("starting hp of defender")
+        print(target.getHealth() / 10)
+        defenseValue = (200 - 100 - terrainDefense * target.getHealth() / 10) / 100
+        print("defenseValue")
+        print(defenseValue)
         print("attackerModifier")
         print(attackerModifier)
-        hpLoss = (attackerHealth * .01) * attackerModifier
+        # TODO
+        hpLoss = (attackerHP / 10) * attackerModifier * defenseValue
         print("hpLoss")
         print(hpLoss)
         target.loseHealth(hpLoss)
         print("Target is at hp:" + str(target.getHealth()))
+        print("_____________________")
         if target.isDead(): 
             killTarget = True
         return killTarget
