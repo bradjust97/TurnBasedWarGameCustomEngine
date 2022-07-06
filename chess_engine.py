@@ -1,6 +1,6 @@
 #
-# The Chess Board class
-# Will store the state of the chess game, print the chess board, find valid moves, store move logs.
+# The Game Board class
+# Will store the state of the game, print the board, find valid moves, store move logs.
 #
 # Note: move log class inspired by Eddie Sharick
 #
@@ -25,7 +25,7 @@ r \ c     0           1           2           3           4           5         
 
 
 class game_state:
-    # Initialize 2D array to represent the chess board
+    # Initialize 2D array to represent the board
     def __init__(self):
         # The board is a 2D array
         # TODO: Change to a numpy format later
@@ -142,7 +142,7 @@ class game_state:
                 self.piece_moved(self.get_piece(current_square_row, current_square_col))
                 return True
 
-            # The chess piece at the starting square
+            # The unit at the starting square
             moving_piece = self.get_piece(current_square_row, current_square_col)
 
             # TODO may be unecessary if calcd via UI
@@ -166,7 +166,6 @@ class game_state:
                     self.board[current_square_row][current_square_col] = Player.EMPTY
 
                 self.piece_moved(moving_piece)
-                #self.white_turn = not self.white_turn
                 return False
             else:
                 return False
@@ -197,8 +196,6 @@ class game_state:
             print("meesong")
             postmoveOptionsObject.appendOption(PostmoveOptionsEnums.ATTACK)
             postmoveOptionsObject.setAttackableEnemies(attackableEnemies)
-        # print("Returning postmove options")
-        # return postmoveOptionsObject
 
     # true if white, false if black
     def whose_turn(self):

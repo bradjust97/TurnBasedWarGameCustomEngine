@@ -1,9 +1,9 @@
 #
-# The Chess piece classes
+# The piece classes
 #
 # TODO: add checking if check after moving suggested move later
 
-# General chess piece
+# General piece
 from enums import Player, PostmoveOptionsEnums, SquareBoard
 from postmoveOptions import postmoveOptions
 from combatModifiers import modifierDict

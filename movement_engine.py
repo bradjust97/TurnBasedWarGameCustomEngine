@@ -2,8 +2,6 @@
 import itertools
 from pprint import pprint
 
-# from chess_engine import game_state
-
 def make_movement_diamond(movement):
     row_change = list(range(movement * -1, movement + 1))
     col_change = list(range(movement * -1, movement + 1))

@@ -10,18 +10,18 @@ from combat_engine import get_pieces_within_range
 from enums import Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 
 """Variables"""
-WIDTH = SquareBoard.WIDTH  # width and height of the chess board
+WIDTH = SquareBoard.WIDTH  # width and height of the board
 HEIGHT = SquareBoard.HEIGHT
-DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the chess board
+DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations
-IMAGES = {}  # images for the chess pieces
+IMAGES = {}  # images for the pieces
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 TERRAINIMAGES = {}
 
 def load_images():
     '''
-    Load images for the chess pieces
+    Load images for the pieces
     '''
     for p in Player.PIECES:
         IMAGES[p] = py.transform.scale(py.image.load("images/" + p + ".png"), (SQ_SIZE, SQ_SIZE))
@@ -31,17 +31,12 @@ def load_images():
         TERRAINIMAGES[tName] = py.transform.scale(py.image.load("images/terrain/" + tName + ".png"), (SQ_SIZE, SQ_SIZE))
 
 def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies):
-    ''' Draw the complete chess board with pieces
+    ''' Draw the complete board with pieces
 
     Keyword arguments:
         :param screen       -- the pygame screen
-        :param game_state   -- the state of the current chess game
+        :param game_state   -- the state of the current game
     '''
-    # print("drawing new game state")
-    # print(square_selected)
-    # if len(square_selected) == 2:
-    #     print(game_state.get_piece(square_selected[0], square_selected[1]))
-    # square selected and game state appear to have the knight but it still doesnt show up
     draw_squares(screen)
     draw_walls(screen, game_state)
     draw_terrain(screen, game_state)
@@ -61,7 +56,7 @@ def draw_walls(screen, game_state):
 
 
 def draw_squares(screen):
-    ''' Draw the chess board with the alternating two colors
+    ''' Draw the board with the alternating two colors
 
     :param screen:          -- the pygame screen
     '''
@@ -80,10 +75,10 @@ def draw_terrain(screen, game_state):
 
 
 def draw_pieces(screen, game_state):
-    ''' Draw the chess pieces onto the board
+    ''' Draw the pieces onto the board
 
     :param screen:          -- the pygame screen
-    :param game_state:      -- the current state of the chess game
+    :param game_state:      -- the current state of the game
     '''
     for r in range(DIMENSION):
         for c in range(DIMENSION):
@@ -132,14 +127,6 @@ def redden_squares(screen, pieces):
         s.set_alpha(100)
         s.fill(py.Color("red"))
         screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
-    # for r in range(DIMENSION):
-    #     for c in range(DIMENSION):
-    #         piece = game_state.get_piece(r, c)
-    #         if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
-    #             s = py.Surface((SQ_SIZE, SQ_SIZE))
-    #             s.set_alpha(100)
-    #             s.fill(py.Color("grey"))
-    #             screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
 
 
 def main():
@@ -262,11 +249,7 @@ def main():
                         print("godmode disabled, phew...")
                 # debug function
                 elif (e.key == py.K_x):
-                    print("x")
-                    # font = py.font.SysFont("Helvitca", 32, True, False)
-                    # text_object = font.render("1", False, py.Color("Red"))
-                    # text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(5,5)
-                    # screen.blit(text_object, text_location)
+                    print("Debug key pressed")
 
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
@@ -314,14 +297,6 @@ def draw_unit_healths(screen, game_state):
                     hpText = str(math.floor(hp))
                     text_object = font.render(hpText, True, py.Color("Green")) 
                     screen.blit(text_object, pixelLocation)
-
-def processOptions(options):
-    # if 0 in options:
-    #     text = "What would you like to do? 0 = wait\n"
-    # if 1 in options:
-    #     text = "What would you like to do? 0 = wait 1 = attack\n"
-    # return text
-    return "What would you like to do? 0 = wait 1 = attack\n"
 
 def gui_move(game_state, player_clicks):
     movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),

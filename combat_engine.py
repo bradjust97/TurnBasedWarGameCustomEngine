@@ -29,12 +29,4 @@ def get_pieces_within_range(piece, game_state):
                 isFriendly = whiteTurn == whitePiece
                 if not isFriendly and game_state:
                     attackableEnemyPieces.append(potentialPiece)
-                    # # when the king is white and the piece near the king is black
-                    # if piece.is_player(Player.PLAYER_1) and evaluating_square.is_player(Player.PLAYER_2):
-                    #     _moves.append((new_row, new_col))
-                    # # when the king is black and the piece near the king is white
-                    # elif piece.is_player(Player.PLAYER_2) and evaluating_square.is_player(Player.PLAYER_1):
-                    #     _moves.append((new_row, new_col))
     return attackableEnemyPieces
-
-# def attack(attacking_piece, target):
