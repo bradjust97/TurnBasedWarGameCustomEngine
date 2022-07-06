@@ -207,26 +207,3 @@ class game_state:
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
 
-
-class chess_move():
-    def __init__(self, starting_square, ending_square, game_state):
-        self.starting_square_row = starting_square[0]
-        self.starting_square_col = starting_square[1]
-        self.moving_piece = game_state.get_piece(self.starting_square_row, self.starting_square_col)
-
-        self.ending_square_row = ending_square[0]
-        self.ending_square_col = ending_square[1]
-        if game_state.is_valid_piece(self.ending_square_row, self.ending_square_col):
-            self.removed_piece = game_state.get_piece(self.ending_square_row, self.ending_square_col)
-        else:
-            self.removed_piece = Player.EMPTY
-
-        self.knight_starting_square = None
-        self.knight_ending_square = None
-        self.moving_knight = None
-
-        self.footman_promoted = False
-        self.replacement_piece = None
-
-    def get_moving_piece(self):
-        return self.moving_piece

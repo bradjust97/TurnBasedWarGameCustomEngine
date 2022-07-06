@@ -92,7 +92,6 @@ class Piece:
         print(defenseValue)
         print("attackerModifier")
         print(attackerModifier)
-        # TODO
         hpLoss = (attackerHP / 10) * attackerModifier * defenseValue
         print("hpLoss")
         print(hpLoss)

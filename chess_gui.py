@@ -299,7 +299,7 @@ def draw_unit_healths(screen, game_state):
             if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
                 hp = piece.getHealth()
                 if  hp < 100:
-                    # TODO 512 is the width and height and scale it based on board BITCH
+                    # 512 is the width and height and scale it based on board BITCH
                     centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
                     centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
 
