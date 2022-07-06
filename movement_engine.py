@@ -49,6 +49,7 @@ def BFS_Traverse_Diamond(checked, M, m, game_state):
         
     m += 1
     if(m == M):
-        return newC #TODO return here two arrays, one that is peacefuls and one that is hits. make sure to only keep DFS on the peaceful one
+        return newC
     else:
         return BFS_Traverse_Diamond(newC,M,m,game_state)
+# TODO make a dfs instead. this is bc we have terrain now
