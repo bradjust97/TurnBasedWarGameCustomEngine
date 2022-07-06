@@ -157,7 +157,7 @@ class game_state:
                         self.black_is_dead = True
                     elif moved_to_piece.get_name() == "king" and not self.whose_turn():
                         self.white_is_dead = True
-                self.move_log.append(chess_move(starting_square, ending_square, self))
+                # self.move_log.append(chess_move(starting_square, ending_square, self))
 
                 if temp:
                     moving_piece.change_row_number(next_square_row)
@@ -207,3 +207,26 @@ class game_state:
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
 
+# TODO: use this later to track moves and have undo or something
+# class chess_move():
+#     def __init__(self, starting_square, ending_square, game_state):
+#         self.starting_square_row = starting_square[0]
+#         self.starting_square_col = starting_square[1]
+#         self.moving_piece = game_state.get_piece(self.starting_square_row, self.starting_square_col)
+
+#         self.ending_square_row = ending_square[0]
+#         self.ending_square_col = ending_square[1]
+#         if game_state.is_valid_piece(self.ending_square_row, self.ending_square_col):
+#             self.removed_piece = game_state.get_piece(self.ending_square_row, self.ending_square_col)
+#         else:
+#             self.removed_piece = Player.EMPTY
+
+#         self.knight_starting_square = None
+#         self.knight_ending_square = None
+#         self.moving_knight = None
+
+#         self.footman_promoted = False
+#         self.replacement_piece = None
+
+#     def get_moving_piece(self):
+#         return self.moving_piece
