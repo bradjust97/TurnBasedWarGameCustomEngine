@@ -16,8 +16,9 @@ white_footman_2 = Footman(1, 1, Player.PLAYER_1)
 white_footman_3 = Footman(1, 2, Player.PLAYER_1)
 white_footman_4 = Footman(1, 3, Player.PLAYER_1)
 white_footman_5 = Footman(1, 4, Player.PLAYER_1)
-white_pieces = [white_knight_1, white_catapult_1, white_scoutCavalry_1,
-                         white_king, white_footman_1, white_footman_2, white_footman_3, white_footman_4, white_footman_5] #white_queen,
+white_pieces = [white_knight_1] #, white_catapult_1, white_scoutCavalry_1,
+# white_pieces = [white_knight_1, white_catapult_1, white_scoutCavalry_1,
+#                          white_king, white_footman_1, white_footman_2, white_footman_3, white_footman_4, white_footman_5] #white_queen,
 
 # Initialize Black Pieces
 black_knight_2 = Knight(15, 15, Player.PLAYER_2)
@@ -30,10 +31,11 @@ black_footman_5 = Footman(14, 12, Player.PLAYER_2)
 black_footman_6 = Footman(14, 13, Player.PLAYER_2)
 black_footman_7 = Footman(14, 14, Player.PLAYER_2)
 black_footman_8 = Footman(14, 15, Player.PLAYER_2)
-black_pieces = [ black_knight_2, black_catapult_2, black_scoutCavalry_2,
-                         black_king, black_footman_4,
-                        black_footman_5,
-                        black_footman_6, black_footman_7, black_footman_8, black_knight_3]  #black_queen,
+black_pieces = [ black_knight_2]
+# black_pieces = [ black_knight_2, black_catapult_2, black_scoutCavalry_2,
+#                          black_king, black_footman_4,
+#                         black_footman_5,
+#                         black_footman_6, black_footman_7, black_footman_8, black_knight_3]  #black_queen,
 
 board = [[Player.EMPTY for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
 

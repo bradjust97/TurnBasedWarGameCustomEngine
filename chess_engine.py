@@ -4,8 +4,6 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
-from operator import xor
-from xmlrpc.client import boolean
 from Piece import Piece
 from combat_engine import get_pieces_within_range
 from enums import Player, PostmoveOptionsEnums, SquareBoard
@@ -40,6 +38,8 @@ class game_state:
         self.board = advancedWarsChess.board
         self.terrain = advancedWarsChess.terrain
         self.moved_pieces = [] 
+        self.numBlackPieces = len(advancedWarsChess.black_pieces)
+        self.numWhitePieces = len(advancedWarsChess.white_pieces)
 
     def end_turn(self):
         print("Ending turn")
@@ -70,7 +70,39 @@ class game_state:
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.terrain[row][col]
     
-    def remove_piece(self, piece):
+    def getNBlackPieces(self):
+        return self.numBlackPieces
+    
+    def getNWhitePieces(self):
+        return self.numWhitePieces
+    
+    def incrNBlackPieces(self, n=1):
+        self.numBlackPieces = self.numBlackPieces + n
+
+    def incrNWhitePieces(self, n=1):
+        self.numWhitePieces = self.numWhitePieces + n
+
+    def decrNBlackPieces(self, n=1):
+        self.numBlackPieces = self.numBlackPieces - n
+
+    def decrNWhitePieces(self, n=1):
+        self.numWhitePieces = self.numWhitePieces - n
+    
+    def incrPieces(self, player, n=1):
+        if (player == Player.PLAYER_1):
+            self.incrNWhitePieces(n)
+        else:
+            self.incrNBlackPieces(n)
+    
+    def decrPieces(self, player, n=1):
+        if (player == Player.PLAYER_1):
+            self.decrNWhitePieces(n)
+        else:
+            self.decrNBlackPieces(n)
+    
+    def remove_piece(self, piece : Piece):
+        player = piece.get_player()
+        self.decrPieces(player)
         self.board[piece.get_row_number()][piece.get_col_number()] = Player.EMPTY
 
     # returns if player piece
@@ -115,6 +147,20 @@ class game_state:
         elif self.black_is_dead:
             print ("White Wins!")
             return 1
+    
+    def noMorePiecesOfPlayer(self):
+        if self.getNWhitePieces() == 0:
+            return Player.PLAYER_1
+        elif self.getNBlackPieces() == 0:
+            return Player.PLAYER_2
+        else:
+            return Player.EMPTY
+    
+    def isGameEnd(self):
+        if self.noMorePiecesOfPlayer() == Player.EMPTY:
+            return (False, Player.EMPTY)
+        else:
+            return (True, self.noMorePiecesOfPlayer())
 
     def get_all_legal_moves(self, player):
         _all_valid_moves = []

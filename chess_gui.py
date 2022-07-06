@@ -160,6 +160,7 @@ def main():
                     footman = Footman(row, col, Player.PLAYER_1)
                     # TODO this should really have its own method
                     game_state.board[row][col] = footman
+                    game_state.incrNWhitePieces() # TODO BUG if you godmode over enemy unit it doesnt decr their number of units
                 elif not game_over:
                     location = py.mouse.get_pos()
                     col = location[0] // SQ_SIZE
@@ -254,16 +255,23 @@ def main():
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
-        endgame = game_state.isDeadKing()
-        if endgame == 0 or game_over:
+        (endgame, deadPlayer) = game_state.isGameEnd()
+        if endgame:
             game_over = True
-            draw_text(screen, "Black wins.")
-        elif endgame == 1 or game_over:
-            game_over = True
-            draw_text(screen, "White wins.")
-        elif endgame == 2 or game_over:
-            game_over = True
-            draw_text(screen, "Stalemate.")
+            if deadPlayer == Player.PLAYER_1:
+                draw_text(screen, "Black wins.")
+            elif deadPlayer == Player.PLAYER_2:
+                draw_text(screen, "White wins.")
+            else:
+                draw_text(screen, "Something went wrong in calculating game end")
+
+
+        # if endgame == 0 or game_over:
+        #     game_over = True
+        #     draw_text(screen, "Black wins.")
+        # elif endgame == 1 or game_over:
+        #     game_over = True
+        #     draw_text(screen, "White wins.")
 
         clock.tick(MAX_FPS)
         py.display.flip()
