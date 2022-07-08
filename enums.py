@@ -1,6 +1,7 @@
 class Player:
     PLAYER_1 = 'white'
     PLAYER_2 = 'black'
+    NEUTRAL = 'neutral'
     EMPTY = -9
     WALL = -8
     PIECES = ['white_r', 'white_n', 'white_q', 'white_k', 'white_p',
@@ -103,7 +104,13 @@ class BuildingEnums:
     TOTALCAPTUREPOINTS = 20
 
 class TerrainEnums:
-    TYPES = [RoadEnums.NAME, PlainsEnums.NAME, ForestEnums.NAME, MountainEnums.NAME, BuildingEnums.NAME]
+    TYPES = [RoadEnums.NAME, 
+            PlainsEnums.NAME, 
+            ForestEnums.NAME, 
+            MountainEnums.NAME, 
+            Player.PLAYER_1 + '_' + BuildingEnums.NAME, 
+            Player.PLAYER_2 + '_' + BuildingEnums.NAME,
+            Player.NEUTRAL + '_' + BuildingEnums.NAME]
     ROAD = RoadEnums
     PLAINS = PlainsEnums
     FOREST = ForestEnums

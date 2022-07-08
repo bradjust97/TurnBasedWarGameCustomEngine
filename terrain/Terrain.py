@@ -9,7 +9,7 @@ class Terrain:
 
     def getTerrainName(self):
         return self._name
-    
+
     def getRow(self):
         return self.row_number
     

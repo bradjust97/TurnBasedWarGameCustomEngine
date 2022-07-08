@@ -35,6 +35,9 @@ class Building(Terrain):
             return True
         else:
             return False
+    
+    def getFullBuildingName(self):
+        return self.getOwningPlayer() + '_' + self.getTerrainName()
 
     def capture(self, piece:Piece):
         # Returns true if piece successfully captured the building

@@ -76,7 +76,9 @@ for i in range(SquareBoard.DIMENSIONS):
              choiceTerrainEnums = random.choice(possibleTerrains)
              terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j, choiceTerrainEnums.DEFENSEBONUS, choiceTerrainEnums.MOVEMENTPENALTY)
 
-terrainMap[1][4] = Building(1,4)
+terrainMap[1][4] = Building(1,4, Player.PLAYER_1)
+terrainMap[7][7] = Building(7,7, Player.NEUTRAL)
+terrainMap[14][14] = Building(14,14, Player.PLAYER_2)
 
 class advancedWarsChess:
     white_pieces = white_pieces

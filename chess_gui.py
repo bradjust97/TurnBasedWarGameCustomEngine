@@ -7,7 +7,7 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the board
@@ -70,8 +70,13 @@ def draw_terrain(screen, game_state):
         for c in range(DIMENSION):
             terrain = game_state.get_terrain(r, c)
             if terrain is not None:
-                screen.blit(TERRAINIMAGES[terrain.getTerrainName()],
-                            py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                if terrain.getTerrainName() != BuildingEnums.NAME:
+                    screen.blit(TERRAINIMAGES[terrain.getTerrainName()],
+                                py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                else:
+                    fullName = terrain.getFullBuildingName()
+                    screen.blit(TERRAINIMAGES[fullName],
+                                py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
 def draw_pieces(screen, game_state):
