@@ -292,7 +292,7 @@ def draw_unit_healths(screen, game_state):
             piece = game_state.get_piece(r, c)
             if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
                 hp = piece.getHealth()
-                if  hp < 100:
+                if  hp < 91:
                     # 512 is the width and height and scale it based on board BITCH
                     centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
                     centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
@@ -305,7 +305,7 @@ def draw_unit_healths(screen, game_state):
                     pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
                     font = py.font.SysFont("Helvitca", 32, True, False)
                     hp = hp / 10
-                    hpText = str(math.floor(hp))
+                    hpText = str(math.ceil(hp))
                     text_object = font.render(hpText, True, py.Color("Green")) 
                     screen.blit(text_object, pixelLocation)
 

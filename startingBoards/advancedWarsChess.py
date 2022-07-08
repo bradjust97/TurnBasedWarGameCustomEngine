@@ -67,7 +67,7 @@ for piece in black_pieces:
 
 terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, y, x, TerrainEnums.ROAD.DEFENSEBONUS, TerrainEnums.ROAD.MOVEMENTPENALTY) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
 
-possibleTerrains = [TerrainEnums.PLAINS, TerrainEnums.FOREST, TerrainEnums.MOUNTAIN]
+possibleTerrains = [TerrainEnums.PLAINS, TerrainEnums.FOREST, TerrainEnums.PLAINS, TerrainEnums.FOREST,TerrainEnums.MOUNTAIN]
 
 for i in range(SquareBoard.DIMENSIONS):
     for j in range(SquareBoard.DIMENSIONS):

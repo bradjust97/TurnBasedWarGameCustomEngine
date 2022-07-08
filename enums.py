@@ -96,6 +96,12 @@ class MountainEnums:
     DEFENSEBONUS = 4
     MOVEMENTPENALTY = 3
 
+class BuildingEnums:
+    NAME = 'building'
+    DEFENSEBONUS = 3
+    MOVEMENTPENALTY = 0
+    TOTALCAPTUREPOINTS = 20
+
 class TerrainEnums:
     TYPES = [RoadEnums.NAME, PlainsEnums.NAME, ForestEnums.NAME, MountainEnums.NAME]
     ROAD = RoadEnums

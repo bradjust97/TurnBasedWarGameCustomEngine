@@ -4,6 +4,7 @@
 # TODO: add checking if check after moving suggested move later
 
 # General piece
+import math
 from enums import Player, PostmoveOptionsEnums, SquareBoard
 from postmoveOptions import postmoveOptions
 from combatModifiers import modifierDict
@@ -111,6 +112,9 @@ class Piece:
     
     def getHealth(self):
         return self.health
+    
+    def getHP(self):
+        return math.ceil(self.health / 10)
     
     def loseHealth(self, hp):
         self.health -= hp
