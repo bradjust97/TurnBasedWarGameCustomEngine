@@ -198,6 +198,9 @@ def main():
                         square_selected = (row, col)
                         player_clicks.append(square_selected)
                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
+                            print((player_clicks[1][0], player_clicks[1][1]))
+                            print("not in")
+                            pprint(valid_moves)
                             # reset the piece selected
                             square_selected = ()
                             player_clicks = []

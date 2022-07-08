@@ -67,8 +67,21 @@ class game_state:
             return False
     
     def get_terrain(self, row, col):
+        # return a terrain given a [x,y]
         if (0 <= row < SquareBoard.DIMENSIONS) and (0 <= col < SquareBoard.DIMENSIONS):
             return self.terrain[row][col]
+    
+    def getTerrainNeighbors(self, row, col):
+        # return a list of adjacent terrains given a x,y
+        neighbors = [] 
+        neighbors.append(self.get_terrain(row + 1, col))
+        neighbors.append(self.get_terrain(row - 1, col))
+        neighbors.append(self.get_terrain(row, col + 1))
+        neighbors.append(self.get_terrain(row, col - 1))
+        neighbors = [x for x in neighbors if x is not None]
+        # print("neighbors")
+        # print(neighbors)
+        return neighbors
     
     def getNBlackPieces(self):
         return self.numBlackPieces

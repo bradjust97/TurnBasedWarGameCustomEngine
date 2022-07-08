@@ -65,7 +65,7 @@ for piece in white_pieces:
 for piece in black_pieces:
     board[piece.get_row_number()][piece.get_col_number()] = piece
 
-terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, x, y, TerrainEnums.ROAD.DEFENSEBONUS, TerrainEnums.ROAD.MOVEMENTPENALTY) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
+terrainMap = [[Terrain(TerrainEnums.ROAD.NAME, y, x, TerrainEnums.ROAD.DEFENSEBONUS, TerrainEnums.ROAD.MOVEMENTPENALTY) for x in range(SquareBoard.DIMENSIONS)] for y in range(SquareBoard.DIMENSIONS)] 
 
 possibleTerrains = [TerrainEnums.PLAINS, TerrainEnums.FOREST, TerrainEnums.MOUNTAIN]
 
@@ -73,7 +73,7 @@ for i in range(SquareBoard.DIMENSIONS):
     for j in range(SquareBoard.DIMENSIONS):
         if i > 2 and i < SquareBoard.DIMENSIONS - 3:
              choiceTerrainEnums = random.choice(possibleTerrains)
-             terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j, choiceTerrainEnums.DEFENSEBONUS)
+             terrainMap[i][j] = Terrain(choiceTerrainEnums.NAME, i, j, choiceTerrainEnums.DEFENSEBONUS, choiceTerrainEnums.MOVEMENTPENALTY)
 
 class advancedWarsChess:
     white_pieces = white_pieces
