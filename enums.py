@@ -103,8 +103,9 @@ class BuildingEnums:
     TOTALCAPTUREPOINTS = 20
 
 class TerrainEnums:
-    TYPES = [RoadEnums.NAME, PlainsEnums.NAME, ForestEnums.NAME, MountainEnums.NAME]
+    TYPES = [RoadEnums.NAME, PlainsEnums.NAME, ForestEnums.NAME, MountainEnums.NAME, BuildingEnums.NAME]
     ROAD = RoadEnums
     PLAINS = PlainsEnums
     FOREST = ForestEnums
     MOUNTAIN = MountainEnums
+    BUILDING = BuildingEnums

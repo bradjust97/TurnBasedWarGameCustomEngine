@@ -7,7 +7,7 @@ class Terrain:
         self.defenseBonus = defenseBonus
         self.movementPenalty = movementPenalty
 
-    def getTerrain(self):
+    def getTerrainName(self):
         return self._name
     
     def getRow(self):

@@ -29,10 +29,7 @@ def blocked_movement_diamond(movement, row_number, col_number, game_state):
     # remove dupes
     listOfLists = [list(t) for t in set(tuple(element) for element in Listy)]
     # turn list of list to list of tuples
-    diamond = [tuple(l) for l in listOfLists]#.append((row_number, col_number))
-    print("LIST---------------------------------------------------")
-    print(diamond)
-    print("LIST---------------------------------------------------")
+    diamond = [tuple(l) for l in listOfLists]
     terrainDiamond = runDijkstraAlgorithmAndFilterMovement(game_state, M, [row_number,col_number], diamond)
     terrainDiamondListTuples = [tuple(l) for l in terrainDiamond]
     return terrainDiamondListTuples
@@ -105,38 +102,20 @@ def dijkstraAlgorithm(game_state, startingSquare, possibleSquares):
     for square in possibleSquaresTuples:
         distanceDictionary[square] = (999999, None)
     distanceDictionary[startingSquareTuple] = (0, None)
-    print("Check:")
-    print(len(distanceDictionary))
-    print(len(possibleSquaresTuples))
 
     while(len(visitedPoints) < len(possibleSquaresTuples)):
-        print("WHILE---------------------------------------------------")
-        print(len(visitedPoints), len(possibleSquaresTuples))
         currentVertex = getUnvisitedWithSmallestDistance(distanceDictionary, visitedPoints)
-        print("CurrentVertex:")
-        print(currentVertex)
         distanceToStart = distanceDictionary[currentVertex][0]
         terrainNeighbors = game_state.getTerrainNeighbors(currentVertex[0], currentVertex[1])
         # print(terrainNeighbors)
         for tn in terrainNeighbors:
-            print("tnXY:")
             tnXY = (tn.getRow(), tn.getCol())
-            print(tnXY)
             if(tnXY in possibleSquaresTuples):
                 distanceFromCurrentVertex = tn.getMovementPenalty() + 1
                 totalDistanceToStart = distanceFromCurrentVertex + distanceToStart
-                if tnXY == (0,3):
-                    print("______________________________________________________________________________")
-                    print(distanceFromCurrentVertex)
-                    print(totalDistanceToStart)
-                    print("______________________________________________________________________________")
                 if(distanceDictionary[tnXY][0] > totalDistanceToStart):
                     distanceDictionary[tnXY] = (totalDistanceToStart, currentVertex)
-                    # print("Appended to dict:")
-                    # print((totalDistanceToStart, currentVertex))
         visitedPoints.append(currentVertex)
-    print("Returning:")
-    pprint(distanceDictionary)
     return distanceDictionary
 
 def runDijkstraAlgorithmAndFilterMovement(game_state, M, startingSquare, possibleSquares):

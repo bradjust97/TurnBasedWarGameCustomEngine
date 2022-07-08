@@ -30,7 +30,7 @@ class Building(Terrain):
     def decrCapturePoints(self, points):
         self.currentCapturePoints -= points
     
-    def canCapture(self, piece:Piece):
+    def canGetCapturedBy(self, piece:Piece):
         if piece.get_name() == FootmanEnums.NAME or piece.get_name() == ArcherEnums.NAME:
             return True
         else:
@@ -38,7 +38,7 @@ class Building(Terrain):
 
     def capture(self, piece:Piece):
         # Returns true if piece successfully captured the building
-        if(self.canCapture(piece)):
+        if(self.canGetCapturedBy(piece)):
             self.decrCapturePoints(piece.getHP())
             if self.getCapturePoints <= 0:
                 print("Building successfully captured")

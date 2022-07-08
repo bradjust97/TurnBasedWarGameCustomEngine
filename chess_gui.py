@@ -70,7 +70,7 @@ def draw_terrain(screen, game_state):
         for c in range(DIMENSION):
             terrain = game_state.get_terrain(r, c)
             if terrain is not None:
-                screen.blit(TERRAINIMAGES[terrain.getTerrain()],
+                screen.blit(TERRAINIMAGES[terrain.getTerrainName()],
                             py.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
@@ -198,9 +198,6 @@ def main():
                         square_selected = (row, col)
                         player_clicks.append(square_selected)
                         if (player_clicks[1][0], player_clicks[1][1]) not in valid_moves:
-                            print((player_clicks[1][0], player_clicks[1][1]))
-                            print("not in")
-                            pprint(valid_moves)
                             # reset the piece selected
                             square_selected = ()
                             player_clicks = []
@@ -313,7 +310,7 @@ def gui_move(game_state, player_clicks):
     movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
     (player_clicks[1][0], player_clicks[1][1]))
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
-    print(movedPiece)
+    print("moved piece " + movedPiece.get_name())
     return (movedPiece, movedSameSpot)
 
 def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Piece, selected_square):

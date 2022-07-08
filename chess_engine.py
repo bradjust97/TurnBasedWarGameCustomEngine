@@ -4,10 +4,12 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
+from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import Player, PostmoveOptionsEnums, SquareBoard
+from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard
 from startingBoards.advancedWarsChess import advancedWarsChess
+from terrain.Building import Building
 
 '''
 r \ c     0           1           2           3           4           5           6           7 
@@ -79,8 +81,6 @@ class game_state:
         neighbors.append(self.get_terrain(row, col + 1))
         neighbors.append(self.get_terrain(row, col - 1))
         neighbors = [x for x in neighbors if x is not None]
-        # print("neighbors")
-        # print(neighbors)
         return neighbors
     
     def getNBlackPieces(self):
@@ -250,9 +250,12 @@ class game_state:
         postmoveOptionsObject = piece.getPostmoveOptions()
         attackableEnemies = get_pieces_within_range(piece, self) 
         rangedUnitMoved = not movedSameSpot and (piece.get_maxRange() >= 2)
+        currentTerrain = self.get_terrain(piece.get_row_number(), piece.get_col_number())
+        if currentTerrain.getTerrainName() == BuildingEnums.NAME:
+            if currentTerrain.canGetCapturedBy(piece):
+                print("Moved footman or archer to building")
         # TODO eventually abstract all detection methods on determining if an option is available or not
         if (len(attackableEnemies) != 0 and not rangedUnitMoved):
-            print("meesong")
             postmoveOptionsObject.appendOption(PostmoveOptionsEnums.ATTACK)
             postmoveOptionsObject.setAttackableEnemies(attackableEnemies)
 
