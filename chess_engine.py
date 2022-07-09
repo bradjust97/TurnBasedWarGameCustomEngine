@@ -254,6 +254,8 @@ class game_state:
         if currentTerrain.getTerrainName() == BuildingEnums.NAME:
             if currentTerrain.canGetCapturedBy(piece):
                 print("Moved footman or archer to building")
+                postmoveOptionsObject.appendOption(PostmoveOptionsEnums.CAPTURE)
+                postmoveOptionsObject.setBuilding(currentTerrain)
         # TODO eventually abstract all detection methods on determining if an option is available or not
         if (len(attackableEnemies) != 0 and not rangedUnitMoved):
             postmoveOptionsObject.appendOption(PostmoveOptionsEnums.ATTACK)
@@ -262,6 +264,12 @@ class game_state:
     # true if white, false if black
     def whose_turn(self):
         return self.white_turn
+    
+    def whose_turn_string(self):
+        if(self.whose_turn):
+            return Player.PLAYER_1
+        else:
+            return Player.PLAYER_2
 
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)

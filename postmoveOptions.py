@@ -5,12 +5,16 @@ class postmoveOptions:
     def __init__(self):
         self.options = [PostmoveOptionsEnums.WAIT]
         self.attackableEnemies = []
+        self.building = None
 
     def getCurrentOptions(self):
         return self.options
     
     def hasAttackOption(self):
         return PostmoveOptionsEnums.ATTACK in self.options
+    
+    def hasCaptureOption(self):
+        return PostmoveOptionsEnums.CAPTURE in self.options
 
     def appendOption(self, option):
         self.options.append(option)
@@ -18,12 +22,16 @@ class postmoveOptions:
     def resetOptions(self):
         self.options = [PostmoveOptionsEnums.WAIT]
         self.attackableEnemies = []
+        self.building = None
 
     def getAttackableEnemies(self):
         return self.attackableEnemies
 
     def setAttackableEnemies(self, attackableEnemies):
         self.attackableEnemies = attackableEnemies
+    
+    def setBuilding(self, building):
+        self.building = building
     
     
     

@@ -42,8 +42,9 @@ class Building(Terrain):
     def capture(self, piece:Piece):
         # Returns true if piece successfully captured the building
         if(self.canGetCapturedBy(piece)):
+            print("Decrd building cap points by " + str(piece.getHP()))
             self.decrCapturePoints(piece.getHP())
-            if self.getCapturePoints <= 0:
+            if self.getCapturePoints() <= 0:
                 print("Building successfully captured")
                 self.setOwningPlayer(piece.get_player())
                 return True

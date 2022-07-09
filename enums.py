@@ -75,6 +75,7 @@ class WarWagonEnums:
 class PostmoveOptionsEnums:
     WAIT = 0
     ATTACK = 1
+    CAPTURE = 2
     WAITORATTACKTEXT = "What would you like to do? 0 = wait 1 = attack\n"
 
 class RoadEnums:

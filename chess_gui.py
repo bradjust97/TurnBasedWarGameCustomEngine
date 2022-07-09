@@ -210,6 +210,7 @@ def main():
                             pieceIsSelected = False
                             print("Out of movement range")
                         elif continuePostmove:
+                            # this happens after movement but during waiting for input for wait/attack/capture
                             # TODO this needs to be extracted for different moves
                             finishedOption = execute_selected_option(game_state, movedPiece, square_selected)
                             if (finishedOption):
@@ -225,7 +226,9 @@ def main():
                             # move piece and do postmove stuff, then reset
                             (movedPiece, movedSameSpot) = gui_move(game_state, player_clicks)
                             game_state.calc_and_set_postmove_options(movedPiece, movedSameSpot)
-                            continuePostmove = movedPiece.getPostmoveOptions().hasAttackOption()
+                            canAttack = movedPiece.getPostmoveOptions().hasAttackOption() 
+                            canCapture = movedPiece.getPostmoveOptions().hasCaptureOption()
+                            continuePostmove = canAttack or canCapture 
                             # if piece has no options then just end the piece movement and reset
                             if not continuePostmove:
                                 square_selected = ()
@@ -321,8 +324,12 @@ def gui_move(game_state, player_clicks):
 def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Piece, selected_square):
     # return true if successfully executed option
     # TODO this is only for attack, need to generalize for multiple options
-    attack = True
-    if (attack):
+    canAttack = sourcePiece.getPostmoveOptions().hasAttackOption() 
+    canCapture = sourcePiece.getPostmoveOptions().hasCaptureOption()
+    selfSquareSelected = (selected_square[0], selected_square[1]) == (sourcePiece.get_row_number(), sourcePiece.get_col_number())
+    print(canAttack)
+    print(canCapture)
+    if (canAttack and not selfSquareSelected):
         attackablePieces = sourcePiece.getPostmoveOptions().getAttackableEnemies()
         if game_state.is_valid_piece(selected_square[0], selected_square[1]):
             target = game_state.get_piece(selected_square[0], selected_square[1])   
@@ -335,6 +342,25 @@ def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Pi
                 return False
         else:
             print("not a valid square to attack")
+    elif (canCapture and selfSquareSelected):
+        building = game_state.get_terrain(selected_square[0], selected_square[1])
+        owningBuildingPlayer = building.getOwningPlayer()
+        if owningBuildingPlayer != game_state.whose_turn_string():
+            print("Pee pee pee pee pee")
+            wasCaptured = building.capture(sourcePiece)
+            return True
+        # Check if not friendly building
+            # If so then do capture
+        # Else just return as a wait action
+        else:
+            print("GOOD!!!!!!!!!!!!!!")
+            return True
+    elif (not canAttack and not canCapture and not selfSquareSelected):
+        print("Select to do something")
+        return False
+    else:
+        print("Choosing to wait")
+        return True
 
 
 if __name__ == "__main__":
