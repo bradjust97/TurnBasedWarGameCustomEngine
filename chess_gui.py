@@ -321,10 +321,6 @@ def gui_move(game_state, player_clicks):
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
     terrainLeftFrom = game_state.get_terrain(player_clicks[0][0], player_clicks[0][1])
     movedFromBuilding = terrainLeftFrom.getTerrainName() == TerrainEnums.BUILDING.NAME
-    print("move bools:")
-    print(terrainLeftFrom.getTerrainName())
-    print(movedFromBuilding)
-    print(not movedSameSpot)
     if movedFromBuilding and not movedSameSpot:
         terrainLeftFrom.resetCapturePoints()
     print("moved piece " + movedPiece.get_name())

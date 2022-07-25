@@ -7,7 +7,7 @@
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard
+from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 from startingBoards.advancedWarsChess import advancedWarsChess
 from terrain.Building import Building
 
@@ -116,7 +116,14 @@ class game_state:
     def remove_piece(self, piece : Piece):
         player = piece.get_player()
         self.decrPieces(player)
+
+        terrain = self.get_terrain(piece.get_row_number(), piece.get_col_number())
+        unitWasOnBuilding = terrain.getTerrainName() == TerrainEnums.BUILDING.NAME
+        if (unitWasOnBuilding):
+            terrain.resetCapturePoints()
+
         self.board[piece.get_row_number()][piece.get_col_number()] = Player.EMPTY
+        
 
     # returns if player piece
     def is_valid_piece(self, row, col):
