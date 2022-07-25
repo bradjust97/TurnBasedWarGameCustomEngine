@@ -37,7 +37,9 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     draw_pieces(screen, game_state)
     draw_unit_healths(screen, game_state)
     draw_building_caps(screen, game_state)
-    grayout_squares(screen, game_state)
+    grayout_squares(screen, game_state, square_selected)
+    if square_selected != ():
+        yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
 
 def draw_walls(screen, game_state):
@@ -107,15 +109,22 @@ def highlight_square(screen, game_state, valid_moves, square_selected):
             for move in valid_moves:
                 screen.blit(s, (move[1] * SQ_SIZE, move[0] * SQ_SIZE))
     
-def grayout_squares(screen, game_state):
+def grayout_squares(screen, game_state, square_selected):
     for r in range(DIMENSION):
         for c in range(DIMENSION):
-            piece = game_state.get_piece(r, c)
-            if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
-                s = py.Surface((SQ_SIZE, SQ_SIZE))
-                s.set_alpha(100)
-                s.fill(py.Color("grey"))
-                screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+            if not (r,c) == square_selected:
+                piece = game_state.get_piece(r, c)
+                if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
+                    s = py.Surface((SQ_SIZE, SQ_SIZE))
+                    s.set_alpha(100)
+                    s.fill(py.Color("grey"))
+                    screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+
+def yellow_selected(screen, square_selected):
+    s = py.Surface((SQ_SIZE, SQ_SIZE))
+    s.set_alpha(100)
+    s.fill(py.Color("yellow"))
+    screen.blit(s, (square_selected[1] * SQ_SIZE, square_selected[0] * SQ_SIZE))
 
 def redden_squares(screen, pieces):
     for piece in pieces:
@@ -256,7 +265,11 @@ def main():
                     print("Debug key pressed-----------------------------")
                     pprint(game_state.playerFunds)
                     print("Debug key pressed-----------------------------")
-                    
+        
+        # square_selected = None
+        # if pieceIsSelected:
+        #     location = py.mouse.get_pos()
+        #     square_selected = (row, col)
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
         (endgame, deadPlayer) = game_state.isGameEnd()
