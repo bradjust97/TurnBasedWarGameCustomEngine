@@ -66,7 +66,7 @@ class game_state:
             if abs(c1 - c2) == 1:
                 return True
         elif c1 == c2:
-            if abs(c1 - c2) == 1:
+            if abs(r1 - r2) == 1:
                 return True
         else:
             return False
