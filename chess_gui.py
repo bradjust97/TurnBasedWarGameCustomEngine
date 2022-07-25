@@ -44,6 +44,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
         highlight_square(screen, game_state, valid_moves, square_selected)
     draw_pieces(screen, game_state)
     draw_unit_healths(screen, game_state)
+    draw_building_caps(screen, game_state)
     grayout_squares(screen, game_state)
     redden_squares(screen, currentAttackableEnemies)
 
@@ -312,8 +313,29 @@ def draw_unit_healths(screen, game_state):
                     font = py.font.SysFont("Helvitca", 32, True, False)
                     hp = hp / 10
                     hpText = str(math.ceil(hp))
-                    text_object = font.render(hpText, True, py.Color("Green")) 
+                    text_object = font.render(hpText, True, py.Color("Red")) 
                     screen.blit(text_object, pixelLocation)
+
+def draw_building_caps(screen, game_state: chess_engine.game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            terrain = game_state.get_terrain(r, c)
+            if terrain.isBuilding():
+                if terrain.getCapturePoints() < BuildingEnums.TOTALCAPTUREPOINTS:
+                    # 512 is the width and height and scale it based on board BITCH
+                    centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS))- 1 # take out 2 for col offset bc we want top left of pic to be in top middle 
+                    centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
+
+                    # This is a shitshow but allow me to explain my logic. W / D signifies the amount of pixels a grid space takes up
+                    # So take that and multiply it by the row we are looking at. The +1 is because we are indexed at 0. The next W/2D 
+                    # is because we want the top left of the image to be in the center of the grid space. The - 1 puts us at exactly the center 
+                    # because 0 index. Lastly below we have col row because the x y is swapped due to error. Ideally we should change everything
+                    # to be consistent but for now this is what it is
+                    pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
+                    font = py.font.SysFont("Helvitca", 32, True, False)
+                    text_object = font.render(str(terrain.getCapturePoints()), True, py.Color("Blue")) 
+                    screen.blit(text_object, pixelLocation)
+
 
 def gui_move(game_state, player_clicks):
     movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),

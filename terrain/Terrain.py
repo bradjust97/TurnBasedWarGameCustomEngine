@@ -1,3 +1,6 @@
+from enums import TerrainEnums
+
+
 class Terrain:
     # Initialize the piece
     def __init__(self, name, row_number, col_number, defenseBonus=0, movementPenalty=0):
@@ -21,3 +24,6 @@ class Terrain:
     
     def getMovementPenalty(self):
         return self.movementPenalty
+
+    def isBuilding(self):
+        return self._name == TerrainEnums.BUILDING.NAME
