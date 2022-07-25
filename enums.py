@@ -118,6 +118,9 @@ class TerrainEnums:
     MOUNTAIN = MountainEnums
     BUILDING = BuildingEnums
 
+class FundsEnums:
+    IncomePerBuilding = 1000
+
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the board

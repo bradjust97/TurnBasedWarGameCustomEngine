@@ -254,14 +254,8 @@ def main():
                 # debug function
                 elif (e.key == py.K_x):
                     print("Debug key pressed-----------------------------")
-                    print(game_state.whose_turn_string())
-                    # for r in range(DIMENSION):
-                    #     for c in range(DIMENSION):
-                    #         piece = game_state.get_piece(r, c)
-                    #         print(piece)
+                    pprint(game_state.playerFunds)
                     print("Debug key pressed-----------------------------")
-                    
-
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
