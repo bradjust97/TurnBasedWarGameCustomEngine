@@ -25,6 +25,7 @@ class Building(Terrain):
         return self.currentCapturePoints
 
     def resetCapturePoints(self):
+        print("reset building cap points")
         self.currentCapturePoints = BuildingEnums.TOTALCAPTUREPOINTS
     
     def decrCapturePoints(self, points):
@@ -47,6 +48,7 @@ class Building(Terrain):
             if self.getCapturePoints() <= 0:
                 print("Building successfully captured")
                 self.setOwningPlayer(piece.get_player())
+                self.resetCapturePoints()
                 return True
             else:
                 return False

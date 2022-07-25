@@ -109,6 +109,9 @@ class Piece:
 
     def getPostmoveOptions(self):
         return self.postmoveOptions
+
+    def resetPostmoveOptions(self):
+        self.postmoveOptions.resetOptions()
     
     def getHealth(self):
         return self.health

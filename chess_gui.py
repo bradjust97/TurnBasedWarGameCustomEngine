@@ -214,6 +214,7 @@ def main():
                             # TODO this needs to be extracted for different moves
                             finishedOption = execute_selected_option(game_state, movedPiece, square_selected)
                             if (finishedOption):
+                                movedPiece.resetPostmoveOptions()
                                 square_selected = ()
                                 player_clicks = []
                                 valid_moves = []
@@ -318,6 +319,14 @@ def gui_move(game_state, player_clicks):
     movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
     (player_clicks[1][0], player_clicks[1][1]))
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+    terrainLeftFrom = game_state.get_terrain(player_clicks[0][0], player_clicks[0][1])
+    movedFromBuilding = terrainLeftFrom.getTerrainName() == TerrainEnums.BUILDING.NAME
+    print("move bools:")
+    print(terrainLeftFrom.getTerrainName())
+    print(movedFromBuilding)
+    print(not movedSameSpot)
+    if movedFromBuilding and not movedSameSpot:
+        terrainLeftFrom.resetCapturePoints()
     print("moved piece " + movedPiece.get_name())
     return (movedPiece, movedSameSpot)
 
