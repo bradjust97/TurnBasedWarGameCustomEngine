@@ -7,17 +7,9 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import DIMENSION, HEIGHT, IMAGES, MAX_FPS, SQ_SIZE, TERRAINIMAGES, WIDTH, BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 
-"""Variables"""
-WIDTH = SquareBoard.WIDTH  # width and height of the board
-HEIGHT = SquareBoard.HEIGHT
-DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
-SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
-MAX_FPS = 15  # FPS for animations
-IMAGES = {}  # images for the pieces
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
-TERRAINIMAGES = {}
 
 def load_images():
     '''
@@ -252,6 +244,7 @@ def main():
                     currentAttackableEnemies = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
+                    game_state.runStartOfTurn()
                 elif (e.key == py.K_g):
                     godmode = not godmode
                     if godmode:
@@ -260,7 +253,14 @@ def main():
                         print("godmode disabled, phew...")
                 # debug function
                 elif (e.key == py.K_x):
-                    print("Debug key pressed")
+                    print("Debug key pressed-----------------------------")
+                    print(game_state.whose_turn_string())
+                    # for r in range(DIMENSION):
+                    #     for c in range(DIMENSION):
+                    #         piece = game_state.get_piece(r, c)
+                    #         print(piece)
+                    print("Debug key pressed-----------------------------")
+                    
 
                     
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
@@ -274,14 +274,6 @@ def main():
                 draw_text(screen, "White wins.")
             else:
                 draw_text(screen, "Something went wrong in calculating game end")
-
-
-        # if endgame == 0 or game_over:
-        #     game_over = True
-        #     draw_text(screen, "Black wins.")
-        # elif endgame == 1 or game_over:
-        #     game_over = True
-        #     draw_text(screen, "White wins.")
 
         clock.tick(MAX_FPS)
         py.display.flip()

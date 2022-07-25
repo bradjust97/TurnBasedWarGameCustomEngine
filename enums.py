@@ -117,3 +117,13 @@ class TerrainEnums:
     FOREST = ForestEnums
     MOUNTAIN = MountainEnums
     BUILDING = BuildingEnums
+
+
+"""Variables"""
+WIDTH = SquareBoard.WIDTH  # width and height of the board
+HEIGHT = SquareBoard.HEIGHT
+DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
+SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
+MAX_FPS = 15  # FPS for animations
+IMAGES = {}  # images for the pieces
+TERRAINIMAGES = {}

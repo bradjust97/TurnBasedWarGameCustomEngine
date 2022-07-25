@@ -7,7 +7,7 @@
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import DIMENSION, BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 from startingBoards.advancedWarsChess import advancedWarsChess
 from terrain.Building import Building
 
@@ -273,13 +273,32 @@ class game_state:
         return self.white_turn
     
     def whose_turn_string(self):
-        if(self.whose_turn):
+        if(self.whose_turn()):
             return Player.PLAYER_1
         else:
             return Player.PLAYER_2
 
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
+    
+    def runStartOfTurn(self):
+        currentPlayer = self.whose_turn_string()
+        self.runStartOfTurnHeal(currentPlayer)
+    
+    def runStartOfTurnHeal(self, currentPlayer):
+        for r in range(DIMENSION):
+            for c in range(DIMENSION):
+                terrain = self.get_terrain(r, c)
+                if terrain.isBuilding():
+                    print(r)
+                    print(c)
+                    print(currentPlayer)
+                    print(terrain.getOwningPlayer())
+                    if terrain.getOwningPlayer() == currentPlayer:
+                        piece = self.get_piece(r, c)
+                        if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
+                            if piece.get_player() == currentPlayer:
+                                piece.gainHealth(20)
 
 # TODO: use this later to track moves and have undo or something
 # class chess_move():

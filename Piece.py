@@ -124,6 +124,8 @@ class Piece:
     
     def gainHealth(self, hp):
         self.health += hp
+        if self.health > 100:
+            self.health = 100
     
     def isDead(self):
         return self.health <= 0
