@@ -109,6 +109,9 @@ class Piece:
 
     def getPostmoveOptions(self):
         return self.postmoveOptions
+
+    def resetPostmoveOptions(self):
+        self.postmoveOptions.resetOptions()
     
     def getHealth(self):
         return self.health
@@ -121,6 +124,8 @@ class Piece:
     
     def gainHealth(self, hp):
         self.health += hp
+        if self.health > 100:
+            self.health = 100
     
     def isDead(self):
         return self.health <= 0

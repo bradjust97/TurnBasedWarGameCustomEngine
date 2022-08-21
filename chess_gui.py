@@ -7,17 +7,9 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import DIMENSION, HEIGHT, IMAGES, MAX_FPS, SQ_SIZE, TERRAINIMAGES, WIDTH, BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 
-"""Variables"""
-WIDTH = SquareBoard.WIDTH  # width and height of the board
-HEIGHT = SquareBoard.HEIGHT
-DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
-SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
-MAX_FPS = 15  # FPS for animations
-IMAGES = {}  # images for the pieces
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
-TERRAINIMAGES = {}
 
 def load_images():
     '''
@@ -44,7 +36,10 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
         highlight_square(screen, game_state, valid_moves, square_selected)
     draw_pieces(screen, game_state)
     draw_unit_healths(screen, game_state)
-    grayout_squares(screen, game_state)
+    draw_building_caps(screen, game_state)
+    grayout_squares(screen, game_state, square_selected)
+    if square_selected != ():
+        yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
 
 def draw_walls(screen, game_state):
@@ -114,15 +109,22 @@ def highlight_square(screen, game_state, valid_moves, square_selected):
             for move in valid_moves:
                 screen.blit(s, (move[1] * SQ_SIZE, move[0] * SQ_SIZE))
     
-def grayout_squares(screen, game_state):
+def grayout_squares(screen, game_state, square_selected):
     for r in range(DIMENSION):
         for c in range(DIMENSION):
-            piece = game_state.get_piece(r, c)
-            if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
-                s = py.Surface((SQ_SIZE, SQ_SIZE))
-                s.set_alpha(100)
-                s.fill(py.Color("grey"))
-                screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+            if not (r,c) == square_selected:
+                piece = game_state.get_piece(r, c)
+                if piece is not None and piece != Player.EMPTY and piece != Player.WALL and game_state.has_piece_moved(piece):
+                    s = py.Surface((SQ_SIZE, SQ_SIZE))
+                    s.set_alpha(100)
+                    s.fill(py.Color("grey"))
+                    screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
+
+def yellow_selected(screen, square_selected):
+    s = py.Surface((SQ_SIZE, SQ_SIZE))
+    s.set_alpha(100)
+    s.fill(py.Color("yellow"))
+    screen.blit(s, (square_selected[1] * SQ_SIZE, square_selected[0] * SQ_SIZE))
 
 def redden_squares(screen, pieces):
     for piece in pieces:
@@ -214,6 +216,7 @@ def main():
                             # TODO this needs to be extracted for different moves
                             finishedOption = execute_selected_option(game_state, movedPiece, square_selected)
                             if (finishedOption):
+                                movedPiece.resetPostmoveOptions()
                                 square_selected = ()
                                 player_clicks = []
                                 valid_moves = []
@@ -250,6 +253,7 @@ def main():
                     currentAttackableEnemies = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
+                    game_state.runStartOfTurn()
                 elif (e.key == py.K_g):
                     godmode = not godmode
                     if godmode:
@@ -258,9 +262,14 @@ def main():
                         print("godmode disabled, phew...")
                 # debug function
                 elif (e.key == py.K_x):
-                    print("Debug key pressed")
-
-                    
+                    print("Debug key pressed-----------------------------")
+                    pprint(game_state.playerFunds)
+                    print("Debug key pressed-----------------------------")
+        
+        # square_selected = None
+        # if pieceIsSelected:
+        #     location = py.mouse.get_pos()
+        #     square_selected = (row, col)
         draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
 
         (endgame, deadPlayer) = game_state.isGameEnd()
@@ -272,14 +281,6 @@ def main():
                 draw_text(screen, "White wins.")
             else:
                 draw_text(screen, "Something went wrong in calculating game end")
-
-
-        # if endgame == 0 or game_over:
-        #     game_over = True
-        #     draw_text(screen, "Black wins.")
-        # elif endgame == 1 or game_over:
-        #     game_over = True
-        #     draw_text(screen, "White wins.")
 
         clock.tick(MAX_FPS)
         py.display.flip()
@@ -311,13 +312,38 @@ def draw_unit_healths(screen, game_state):
                     font = py.font.SysFont("Helvitca", 32, True, False)
                     hp = hp / 10
                     hpText = str(math.ceil(hp))
-                    text_object = font.render(hpText, True, py.Color("Green")) 
+                    text_object = font.render(hpText, True, py.Color("Red")) 
                     screen.blit(text_object, pixelLocation)
+
+def draw_building_caps(screen, game_state: chess_engine.game_state):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            terrain = game_state.get_terrain(r, c)
+            if terrain.isBuilding():
+                if terrain.getCapturePoints() < BuildingEnums.TOTALCAPTUREPOINTS:
+                    # 512 is the width and height and scale it based on board BITCH
+                    centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS))- 1 # take out 2 for col offset bc we want top left of pic to be in top middle 
+                    centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
+
+                    # This is a shitshow but allow me to explain my logic. W / D signifies the amount of pixels a grid space takes up
+                    # So take that and multiply it by the row we are looking at. The +1 is because we are indexed at 0. The next W/2D 
+                    # is because we want the top left of the image to be in the center of the grid space. The - 1 puts us at exactly the center 
+                    # because 0 index. Lastly below we have col row because the x y is swapped due to error. Ideally we should change everything
+                    # to be consistent but for now this is what it is
+                    pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
+                    font = py.font.SysFont("Helvitca", 32, True, False)
+                    text_object = font.render(str(terrain.getCapturePoints()), True, py.Color("Blue")) 
+                    screen.blit(text_object, pixelLocation)
+
 
 def gui_move(game_state, player_clicks):
     movedSameSpot = game_state.move_piece((player_clicks[0][0], player_clicks[0][1]),
     (player_clicks[1][0], player_clicks[1][1]))
     movedPiece = game_state.get_piece(player_clicks[1][0], player_clicks[1][1])
+    terrainLeftFrom = game_state.get_terrain(player_clicks[0][0], player_clicks[0][1])
+    movedFromBuilding = terrainLeftFrom.getTerrainName() == TerrainEnums.BUILDING.NAME
+    if movedFromBuilding and not movedSameSpot:
+        terrainLeftFrom.resetCapturePoints()
     print("moved piece " + movedPiece.get_name())
     return (movedPiece, movedSameSpot)
 

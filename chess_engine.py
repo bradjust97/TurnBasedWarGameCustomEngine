@@ -7,7 +7,7 @@
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard
+from enums import DIMENSION, BuildingEnums, FundsEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 from startingBoards.advancedWarsChess import advancedWarsChess
 from terrain.Building import Building
 
@@ -42,6 +42,9 @@ class game_state:
         self.moved_pieces = [] 
         self.numBlackPieces = len(advancedWarsChess.black_pieces)
         self.numWhitePieces = len(advancedWarsChess.white_pieces)
+        self.playerFunds = {Player.PLAYER_1 : 0, Player.PLAYER_2 : 0}
+
+        self.runStartOfTurn()
 
     def end_turn(self):
         print("Ending turn")
@@ -63,7 +66,7 @@ class game_state:
             if abs(c1 - c2) == 1:
                 return True
         elif c1 == c2:
-            if abs(c1 - c2) == 1:
+            if abs(r1 - r2) == 1:
                 return True
         else:
             return False
@@ -116,7 +119,14 @@ class game_state:
     def remove_piece(self, piece : Piece):
         player = piece.get_player()
         self.decrPieces(player)
+
+        terrain = self.get_terrain(piece.get_row_number(), piece.get_col_number())
+        unitWasOnBuilding = terrain.getTerrainName() == TerrainEnums.BUILDING.NAME
+        if (unitWasOnBuilding):
+            terrain.resetCapturePoints()
+
         self.board[piece.get_row_number()][piece.get_col_number()] = Player.EMPTY
+        
 
     # returns if player piece
     def is_valid_piece(self, row, col):
@@ -266,13 +276,43 @@ class game_state:
         return self.white_turn
     
     def whose_turn_string(self):
-        if(self.whose_turn):
+        if(self.whose_turn()):
             return Player.PLAYER_1
         else:
             return Player.PLAYER_2
 
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
+    
+    def runStartOfTurn(self):
+        currentPlayer = self.whose_turn_string()
+        self.runStartOfTurnHeal(currentPlayer)
+        self.runStartOfTurnFunds(currentPlayer)
+    
+    def runStartOfTurnHeal(self, currentPlayer):
+        for r in range(DIMENSION):
+            for c in range(DIMENSION):
+                terrain = self.get_terrain(r, c)
+                if terrain.isBuilding():
+                    if terrain.getOwningPlayer() == currentPlayer:
+                        piece = self.get_piece(r, c)
+                        if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
+                            if piece.get_player() == currentPlayer:
+                                piece.gainHealth(20)
+
+    def getPlayerBuildingCount(self, player):
+        count = 0
+        for r in range(DIMENSION):
+            for c in range(DIMENSION):
+                terrain = self.get_terrain(r, c)
+                if terrain.isBuilding():
+                    if terrain.getOwningPlayer() == player:
+                        count += 1
+        return count
+    
+    def runStartOfTurnFunds(self, currentPlayer):
+        count = self.getPlayerBuildingCount(currentPlayer)
+        self.playerFunds[currentPlayer] += (count * FundsEnums.IncomePerBuilding)
 
 # TODO: use this later to track moves and have undo or something
 # class chess_move():
