@@ -196,6 +196,8 @@ def main():
                                 player_clicks = []
                                 valid_moves = [] #TODO This may be a bug to add this line double check this
                                 pieceIsSelected = False
+                        elif game_state.get_terrain(row, col).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(row, col)):
+                            print("Clicked owned empty building")
                         else:
                             print("not a valid piece")
                             square_selected = ()

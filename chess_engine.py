@@ -283,6 +283,9 @@ class game_state:
 
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
+
+    def is_current_players_building(self, terrain):
+        return self.whose_turn() == (terrain.getOwningPlayer() == Player.PLAYER_1)
     
     def runStartOfTurn(self):
         currentPlayer = self.whose_turn_string()
