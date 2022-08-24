@@ -22,6 +22,10 @@ class SideMenu:
     WIDTH = 256
     HEIGHT = SquareBoard.HEIGHT
 
+class BottomMenu:
+    WIDTH = SquareBoard.WIDTH
+    HEIGHT = 128
+
 class KingEnums:
     MOVEMENT = 1
     NAME = 'king'
@@ -130,7 +134,9 @@ class FundsEnums:
 WIDTH = SquareBoard.WIDTH  # width and height of the board
 HEIGHT = SquareBoard.HEIGHT
 SIDEMENUWIDTH = SideMenu.WIDTH
-SIDEMENUHEIGHT = SideMenu.HEIGHT
+SIDEMENUHEIGHT = SideMenu.HEIGHT + BottomMenu.HEIGHT
+BOTTOMMENUWIDTH = BottomMenu.WIDTH + SideMenu.WIDTH
+BOTTOMMENUHEIGHT = BottomMenu.HEIGHT
 DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations

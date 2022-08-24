@@ -7,7 +7,7 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import DIMENSION, HEIGHT, IMAGES, MAX_FPS, SIDEMENUHEIGHT, SIDEMENUWIDTH, SQ_SIZE, TERRAINIMAGES, WIDTH, BuildingEnums, Player, PostmoveOptionsEnums, SideMenu, SquareBoard, TerrainEnums
+from enums import BOTTOMMENUHEIGHT, DIMENSION, HEIGHT, IMAGES, MAX_FPS, SIDEMENUHEIGHT, SIDEMENUWIDTH, SQ_SIZE, TERRAINIMAGES, WIDTH, BottomMenu, BuildingEnums, Player, PostmoveOptionsEnums, SideMenu, SquareBoard, TerrainEnums
 
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 
@@ -39,6 +39,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     draw_building_caps(screen, game_state)
     grayout_squares(screen, game_state, square_selected)
     draw_side_menu(screen, game_state)
+    draw_bottom_menu(screen, game_state, square_selected)
     if square_selected != ():
         yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
@@ -139,7 +140,8 @@ def redden_squares(screen, pieces):
 
 def main():
     py.init()
-    screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + (SIDEMENUHEIGHT - HEIGHT)))
+    # screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + (SIDEMENUHEIGHT - HEIGHT)))
+    screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + BOTTOMMENUHEIGHT))
     clock = py.time.Clock()
     game_state = chess_engine.game_state()
     load_images()
@@ -149,6 +151,7 @@ def main():
     valid_moves = []
     game_over = False
     pieceIsSelected = False
+    buildingIsSelected = False
     continuePostmove = False
     currentAttackableEnemies = []
     godmode = False
@@ -173,7 +176,8 @@ def main():
                     location = py.mouse.get_pos()
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
-                    if not pieceIsSelected:
+                    if not pieceIsSelected and not buildingIsSelected:
+                        # If user clicks piece
                         if game_state.is_valid_piece(row, col):
                             potentialPiece = game_state.get_piece(row, col)
                             if (not game_state.has_piece_moved(potentialPiece) and game_state.is_current_players_piece(potentialPiece)):
@@ -196,8 +200,12 @@ def main():
                                 player_clicks = []
                                 valid_moves = [] #TODO This may be a bug to add this line double check this
                                 pieceIsSelected = False
+                        # If user clicks owned empty building
                         elif game_state.get_terrain(row, col).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(row, col)):
                             print("Clicked owned empty building")
+                            square_selected = (row, col)
+                            player_clicks.append(square_selected)
+                            buildingIsSelected = True
                         else:
                             print("not a valid piece")
                             square_selected = ()
@@ -244,6 +252,14 @@ def main():
                             # setup gui for user input post move
                             else:
                                 currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
+                    elif buildingIsSelected:
+                        if (player_clicks):
+                            # reset
+                            square_selected = ()
+                            player_clicks = []
+                            valid_moves = []
+                            buildingIsSelected = False
+
             # --------------------------------------------------------
             elif e.type == py.KEYDOWN:
                 if (e.key == py.K_e):
@@ -310,11 +326,27 @@ def draw_side_menu(screen, game_state):
     screen.blit(blackFundsText, text_location2)
 
 def reset_side_menu(screen):
-    menuShape = py.Rect(0, 0, SideMenu.WIDTH, SideMenu.HEIGHT)
     s = py.Surface((SideMenu.WIDTH, SideMenu.HEIGHT))
     # s.set_alpha(100)
     s.fill(py.Color("grey"))
     screen.blit(s, (WIDTH, 0))
+
+def draw_bottom_menu(screen, game_state, square_selected):
+    reset_bottom_menu(screen)
+    print(square_selected)
+    if square_selected != ():
+        if game_state.get_terrain(square_selected[0], square_selected[1]).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(square_selected[0], square_selected[1])):
+            font = py.font.SysFont("Helvitca", 32, True, False)
+
+            whiteFundsText = font.render("testing", False, py.Color("Black"))
+            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + whiteFundsText.get_height() / 2)
+            screen.blit(whiteFundsText, text_location)
+
+def reset_bottom_menu(screen):
+    s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))
+    # s.set_alpha(100)
+    s.fill(py.Color("white"))
+    screen.blit(s, (0, HEIGHT))
 
 def draw_unit_healths(screen, game_state):
     for r in range(DIMENSION):
