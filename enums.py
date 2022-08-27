@@ -8,7 +8,7 @@ class Player:
               'black_r', 'black_n', 'black_q', 'black_k', 'black_p']
     UNITS = ['white_scoutCavalry', 'black_scoutCavalry', 'black_knight', 'white_knight',
              'white_footman', 'black_footman', 'white_king', 'black_king', 
-             'white_queen', 'black_queen', 'white_catapult', 'black_catapult']
+             'white_queen', 'black_queen', 'white_catapult', 'black_catapult', 'white_archer', 'black_archer']
              # No images for:
              # 'white_archer', 'black_archer', and more
 
