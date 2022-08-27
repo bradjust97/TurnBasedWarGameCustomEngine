@@ -282,7 +282,7 @@ def main():
                 # debug function
                 elif (e.key == py.K_x):
                     print("Debug key pressed-----------------------------")
-                    pprint(game_state.playerFunds)
+                    pprint(game_state.getPossibleBuildGroundUnitsOfCurrentPlayer())
                     print("Debug key pressed-----------------------------")
         
         # square_selected = None
@@ -333,14 +333,14 @@ def reset_side_menu(screen):
 
 def draw_bottom_menu(screen, game_state, square_selected):
     reset_bottom_menu(screen)
-    print(square_selected)
+    # print(square_selected)
     if square_selected != ():
         if game_state.get_terrain(square_selected[0], square_selected[1]).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(square_selected[0], square_selected[1])):
             font = py.font.SysFont("Helvitca", 32, True, False)
 
-            whiteFundsText = font.render("testing", False, py.Color("Black"))
-            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + whiteFundsText.get_height() / 2)
-            screen.blit(whiteFundsText, text_location)
+            buildUnitText = font.render("Base selected", False, py.Color("Black"))
+            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + buildUnitText.get_height() / 2)
+            screen.blit(buildUnitText, text_location)
 
 def reset_bottom_menu(screen):
     s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))
