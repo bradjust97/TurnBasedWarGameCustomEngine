@@ -22,7 +22,7 @@ def load_images():
     for tName in TerrainEnums.TYPES:
         TERRAINIMAGES[tName] = py.transform.scale(py.image.load("images/terrain/" + tName + ".png"), (SQ_SIZE, SQ_SIZE))
 
-def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies):
+def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys):
     ''' Draw the complete board with pieces
 
     Keyword arguments:
@@ -39,7 +39,7 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     draw_building_caps(screen, game_state)
     grayout_squares(screen, game_state, square_selected)
     draw_side_menu(screen, game_state)
-    draw_bottom_menu(screen, game_state, square_selected)
+    draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys)
     if square_selected != ():
         yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
@@ -155,6 +155,7 @@ def main():
     continuePostmove = False
     currentAttackableEnemies = []
     godmode = False
+    possibleUnitBuys = []
 
     game_state = chess_engine.game_state()
 
@@ -206,6 +207,7 @@ def main():
                             square_selected = (row, col)
                             player_clicks.append(square_selected)
                             buildingIsSelected = True
+                            possibleUnitBuys = game_state.getPossibleBuildGroundUnitsOfCurrentPlayer()
                         else:
                             print("not a valid piece")
                             square_selected = ()
@@ -253,6 +255,8 @@ def main():
                             else:
                                 currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
                     elif buildingIsSelected:
+                        square_selected = (row, col)
+                        player_clicks.append(square_selected)
                         if (player_clicks):
                             # reset
                             square_selected = ()
@@ -289,7 +293,7 @@ def main():
         # if pieceIsSelected:
         #     location = py.mouse.get_pos()
         #     square_selected = (row, col)
-        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
+        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys)
 
         (endgame, deadPlayer) = game_state.isGameEnd()
         if endgame:
@@ -331,16 +335,22 @@ def reset_side_menu(screen):
     s.fill(py.Color("grey"))
     screen.blit(s, (WIDTH, 0))
 
-def draw_bottom_menu(screen, game_state, square_selected):
+def draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys):
     reset_bottom_menu(screen)
-    # print(square_selected)
-    if square_selected != ():
+    
+    if square_selected != () and len(possibleUnitBuys) > 0:
         if game_state.get_terrain(square_selected[0], square_selected[1]).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(square_selected[0], square_selected[1])):
             font = py.font.SysFont("Helvitca", 32, True, False)
-
-            buildUnitText = font.render("Base selected", False, py.Color("Black"))
-            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + buildUnitText.get_height() / 2)
+            buildUnitText = font.render("Select Unit To Buy", False, py.Color("Black"))
+            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT)
             screen.blit(buildUnitText, text_location)
+            
+            ind = 1
+            for unitName in possibleUnitBuys:
+                buildUnitText = font.render(unitName, False, py.Color("Black"))
+                text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + ind * buildUnitText.get_height())
+                screen.blit(buildUnitText, text_location)
+                ind += 1
 
 def reset_bottom_menu(screen):
     s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))
