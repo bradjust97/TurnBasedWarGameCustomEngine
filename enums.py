@@ -8,7 +8,7 @@ class Player:
               'black_r', 'black_n', 'black_q', 'black_k', 'black_p']
     UNITS = ['white_scoutCavalry', 'black_scoutCavalry', 'black_knight', 'white_knight',
              'white_footman', 'black_footman', 'white_king', 'black_king', 
-             'white_queen', 'black_queen', 'white_catapult', 'black_catapult']
+             'white_queen', 'black_queen', 'white_catapult', 'black_catapult', 'white_archer', 'black_archer']
              # No images for:
              # 'white_archer', 'black_archer', and more
 
@@ -17,6 +17,14 @@ class SquareBoard: # assume square for now
     DIMENSIONS = 16
     WIDTH = 512
     HEIGHT = 512
+
+class SideMenu:
+    WIDTH = 256
+    HEIGHT = SquareBoard.HEIGHT
+
+class BottomMenu:
+    WIDTH = SquareBoard.WIDTH
+    HEIGHT = 128
 
 class KingEnums:
     MOVEMENT = 1
@@ -125,6 +133,10 @@ class FundsEnums:
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the board
 HEIGHT = SquareBoard.HEIGHT
+SIDEMENUWIDTH = SideMenu.WIDTH
+SIDEMENUHEIGHT = SideMenu.HEIGHT + BottomMenu.HEIGHT
+BOTTOMMENUWIDTH = BottomMenu.WIDTH + SideMenu.WIDTH
+BOTTOMMENUHEIGHT = BottomMenu.HEIGHT
 DIMENSION = SquareBoard.DIMENSIONS  # the dimensions of the board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations

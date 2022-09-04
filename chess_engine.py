@@ -4,12 +4,14 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
+import imp
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
 from enums import DIMENSION, BuildingEnums, FundsEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 from startingBoards.advancedWarsChess import advancedWarsChess
 from terrain.Building import Building
+from unitCosts import groundUnitCosts
 
 '''
 r \ c     0           1           2           3           4           5           6           7 
@@ -283,6 +285,9 @@ class game_state:
 
     def is_current_players_piece(self, piece):
         return self.whose_turn() == (piece.get_player() == Player.PLAYER_1)
+
+    def is_current_players_building(self, terrain):
+        return self.whose_turn() == (terrain.getOwningPlayer() == Player.PLAYER_1) and terrain.getOwningPlayer() != Player.NEUTRAL
     
     def runStartOfTurn(self):
         currentPlayer = self.whose_turn_string()
@@ -310,9 +315,21 @@ class game_state:
                         count += 1
         return count
     
+    def getFundsForPlayer(self, player):
+        return self.playerFunds[player]
+    
     def runStartOfTurnFunds(self, currentPlayer):
         count = self.getPlayerBuildingCount(currentPlayer)
         self.playerFunds[currentPlayer] += (count * FundsEnums.IncomePerBuilding)
+    
+    def getPossibleBuildGroundUnitsOfCurrentPlayer(self):
+        currentPlayer = self.whose_turn_string()
+        totalFunds = self.getFundsForPlayer(currentPlayer)
+        possibleBuildGroundUnits = []
+        for unitName, unitCost in groundUnitCosts.items():
+            if unitCost <= totalFunds:
+                possibleBuildGroundUnits.append(unitName)
+        return possibleBuildGroundUnits
 
 # TODO: use this later to track moves and have undo or something
 # class chess_move():

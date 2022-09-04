@@ -7,7 +7,7 @@ import chess_engine
 import pygame as py
 from combat_engine import get_pieces_within_range
 
-from enums import DIMENSION, HEIGHT, IMAGES, MAX_FPS, SQ_SIZE, TERRAINIMAGES, WIDTH, BuildingEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import BOTTOMMENUHEIGHT, DIMENSION, HEIGHT, IMAGES, MAX_FPS, SIDEMENUHEIGHT, SIDEMENUWIDTH, SQ_SIZE, TERRAINIMAGES, WIDTH, BottomMenu, BuildingEnums, Player, PostmoveOptionsEnums, SideMenu, SquareBoard, TerrainEnums
 
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 
@@ -22,7 +22,7 @@ def load_images():
     for tName in TerrainEnums.TYPES:
         TERRAINIMAGES[tName] = py.transform.scale(py.image.load("images/terrain/" + tName + ".png"), (SQ_SIZE, SQ_SIZE))
 
-def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies):
+def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys):
     ''' Draw the complete board with pieces
 
     Keyword arguments:
@@ -38,6 +38,8 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     draw_unit_healths(screen, game_state)
     draw_building_caps(screen, game_state)
     grayout_squares(screen, game_state, square_selected)
+    draw_side_menu(screen, game_state)
+    draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys)
     if square_selected != ():
         yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
@@ -138,7 +140,8 @@ def redden_squares(screen, pieces):
 
 def main():
     py.init()
-    screen = py.display.set_mode((WIDTH, HEIGHT))
+    # screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + (SIDEMENUHEIGHT - HEIGHT)))
+    screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + BOTTOMMENUHEIGHT))
     clock = py.time.Clock()
     game_state = chess_engine.game_state()
     load_images()
@@ -148,9 +151,11 @@ def main():
     valid_moves = []
     game_over = False
     pieceIsSelected = False
+    buildingIsSelected = False
     continuePostmove = False
     currentAttackableEnemies = []
     godmode = False
+    possibleUnitBuys = []
 
     game_state = chess_engine.game_state()
 
@@ -172,7 +177,8 @@ def main():
                     location = py.mouse.get_pos()
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
-                    if not pieceIsSelected:
+                    if not pieceIsSelected and not buildingIsSelected:
+                        # If user clicks piece
                         if game_state.is_valid_piece(row, col):
                             potentialPiece = game_state.get_piece(row, col)
                             if (not game_state.has_piece_moved(potentialPiece) and game_state.is_current_players_piece(potentialPiece)):
@@ -195,6 +201,13 @@ def main():
                                 player_clicks = []
                                 valid_moves = [] #TODO This may be a bug to add this line double check this
                                 pieceIsSelected = False
+                        # If user clicks owned empty building
+                        elif game_state.get_terrain(row, col).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(row, col)):
+                            print("Clicked owned empty building")
+                            square_selected = (row, col)
+                            player_clicks.append(square_selected)
+                            buildingIsSelected = True
+                            possibleUnitBuys = game_state.getPossibleBuildGroundUnitsOfCurrentPlayer()
                         else:
                             print("not a valid piece")
                             square_selected = ()
@@ -241,6 +254,16 @@ def main():
                             # setup gui for user input post move
                             else:
                                 currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
+                    elif buildingIsSelected:
+                        square_selected = (row, col)
+                        player_clicks.append(square_selected)
+                        if (player_clicks):
+                            # reset
+                            square_selected = ()
+                            player_clicks = []
+                            valid_moves = []
+                            buildingIsSelected = False
+
             # --------------------------------------------------------
             elif e.type == py.KEYDOWN:
                 if (e.key == py.K_e):
@@ -263,14 +286,14 @@ def main():
                 # debug function
                 elif (e.key == py.K_x):
                     print("Debug key pressed-----------------------------")
-                    pprint(game_state.playerFunds)
+                    pprint(game_state.getPossibleBuildGroundUnitsOfCurrentPlayer())
                     print("Debug key pressed-----------------------------")
         
         # square_selected = None
         # if pieceIsSelected:
         #     location = py.mouse.get_pos()
         #     square_selected = (row, col)
-        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies)
+        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys)
 
         (endgame, deadPlayer) = game_state.isGameEnd()
         if endgame:
@@ -291,6 +314,49 @@ def draw_text(screen, text):
     text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
                                                       HEIGHT / 2 - text_object.get_height() / 2)
     screen.blit(text_object, text_location)
+
+def draw_side_menu(screen, game_state):
+    reset_side_menu(screen)
+    font = py.font.SysFont("Helvitca", 32, True, False)
+
+    whiteFundsText = font.render("Red funds: " + str(game_state.playerFunds[Player.PLAYER_1]), False, py.Color("Black"))
+    text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH + SideMenu.WIDTH / 2 - whiteFundsText.get_width() / 2,
+                                                      HEIGHT / 4 - whiteFundsText.get_height() / 2)
+    screen.blit(whiteFundsText, text_location)
+
+    blackFundsText = font.render("Blue funds: " + str(game_state.playerFunds[Player.PLAYER_2]), False, py.Color("Black"))
+    text_location2 = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH + SideMenu.WIDTH / 2 - blackFundsText.get_width() / 2,
+                                                      3 * HEIGHT / 4 - blackFundsText.get_height() / 2)
+    screen.blit(blackFundsText, text_location2)
+
+def reset_side_menu(screen):
+    s = py.Surface((SideMenu.WIDTH, SideMenu.HEIGHT))
+    # s.set_alpha(100)
+    s.fill(py.Color("grey"))
+    screen.blit(s, (WIDTH, 0))
+
+def draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys):
+    reset_bottom_menu(screen)
+    
+    if square_selected != () and len(possibleUnitBuys) > 0:
+        if game_state.get_terrain(square_selected[0], square_selected[1]).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(square_selected[0], square_selected[1])):
+            font = py.font.SysFont("Helvitca", 32, True, False)
+            buildUnitText = font.render("Select Unit To Buy", False, py.Color("Black"))
+            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT)
+            screen.blit(buildUnitText, text_location)
+            
+            ind = 1
+            for unitName in possibleUnitBuys:
+                buildUnitText = font.render(unitName, False, py.Color("Black"))
+                text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + ind * buildUnitText.get_height())
+                screen.blit(buildUnitText, text_location)
+                ind += 1
+
+def reset_bottom_menu(screen):
+    s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))
+    # s.set_alpha(100)
+    s.fill(py.Color("white"))
+    screen.blit(s, (0, HEIGHT))
 
 def draw_unit_healths(screen, game_state):
     for r in range(DIMENSION):
