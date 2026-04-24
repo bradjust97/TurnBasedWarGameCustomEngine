@@ -9,11 +9,15 @@ class Building(Terrain):
     def __init__(self, row_number, col_number, player=None):
         self.owningPlayer = player
         self.currentCapturePoints = BuildingEnums.TOTALCAPTUREPOINTS
+        self.producedThisTurn = False
 
         name = BuildingEnums.NAME
         defenseBonus = BuildingEnums.DEFENSEBONUS
         movementPenalty = BuildingEnums.MOVEMENTPENALTY
         super().__init__(name, row_number, col_number, defenseBonus, movementPenalty)
+
+    def resetTurnState(self):
+        self.producedThisTurn = False
     
     def getOwningPlayer(self):
         return self.owningPlayer

@@ -8,8 +8,23 @@ import pygame as py
 from combat_engine import get_pieces_within_range
 
 from enums import BOTTOMMENUHEIGHT, DIMENSION, HEIGHT, IMAGES, MAX_FPS, SIDEMENUHEIGHT, SIDEMENUWIDTH, SQ_SIZE, TERRAINIMAGES, WIDTH, BottomMenu, BuildingEnums, Player, PostmoveOptionsEnums, SideMenu, SquareBoard, TerrainEnums
+from unitCosts import groundUnitCosts
 
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
+
+BOTTOM_MENU_TITLE_HEIGHT = 32
+BOTTOM_MENU_ROW_HEIGHT = 32
+
+
+def get_bottom_menu_unit_at(x, y, possibleUnitBuys):
+    if x < 0 or x >= WIDTH:
+        return None
+    if y < HEIGHT + BOTTOM_MENU_TITLE_HEIGHT:
+        return None
+    idx = (y - HEIGHT - BOTTOM_MENU_TITLE_HEIGHT) // BOTTOM_MENU_ROW_HEIGHT
+    if 0 <= idx < len(possibleUnitBuys):
+        return possibleUnitBuys[idx]
+    return None
 
 def load_images():
     '''
@@ -173,11 +188,13 @@ def main():
                     game_state.incrNWhitePieces() # TODO BUG if you godmode over enemy unit it doesnt decr their number of units
                 elif not game_over:
                     location = py.mouse.get_pos()
-                    col = location[0] // SQ_SIZE
-                    row = location[1] // SQ_SIZE
+                    x, y = location
+                    col = x // SQ_SIZE
+                    row = y // SQ_SIZE
+                    is_on_board = 0 <= row < DIMENSION and 0 <= col < DIMENSION
                     if not pieceIsSelected and not buildingIsSelected:
                         # If user clicks piece
-                        if game_state.is_valid_piece(row, col):
+                        if is_on_board and game_state.is_valid_piece(row, col):
                             potentialPiece = game_state.get_piece(row, col)
                             if (not game_state.has_piece_moved(potentialPiece) and game_state.is_current_players_piece(potentialPiece)):
                                 print ("selected valid piece")
@@ -191,21 +208,25 @@ def main():
                                     player_clicks = []
                                     square_selected = ()
                                     pieceIsSelected = False
-                                else: 
+                                else:
                                     print("valid moves exist")
-                            else: 
+                            else:
                                 print("piece has already moved or that is an enemy unit")
                                 square_selected = ()
                                 player_clicks = []
                                 valid_moves = [] #TODO This may be a bug to add this line double check this
                                 pieceIsSelected = False
                         # If user clicks owned empty building
-                        elif game_state.get_terrain(row, col).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(row, col)):
-                            print("Clicked owned empty building")
-                            square_selected = (row, col)
-                            player_clicks.append(square_selected)
-                            buildingIsSelected = True
-                            possibleUnitBuys = game_state.getPossibleBuildGroundUnitsOfCurrentPlayer()
+                        elif is_on_board and game_state.get_terrain(row, col) is not None and game_state.get_terrain(row, col).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(row, col)):
+                            building = game_state.get_terrain(row, col)
+                            if building.producedThisTurn:
+                                print("Building already produced this turn")
+                            else:
+                                print("Clicked owned empty building")
+                                square_selected = (row, col)
+                                player_clicks.append(square_selected)
+                                buildingIsSelected = True
+                                possibleUnitBuys = game_state.getPossibleBuildGroundUnitsOfCurrentPlayer()
                         else:
                             print("not a valid piece")
                             square_selected = ()
@@ -253,14 +274,24 @@ def main():
                             else:
                                 currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
                     elif buildingIsSelected:
-                        square_selected = (row, col)
-                        player_clicks.append(square_selected)
-                        if (player_clicks):
-                            # reset
+                        unitClicked = get_bottom_menu_unit_at(x, y, possibleUnitBuys)
+                        if unitClicked is not None:
+                            buildingSquare = player_clicks[0]
+                            success = game_state.buyUnit(unitClicked, buildingSquare[0], buildingSquare[1])
+                            if success:
+                                square_selected = ()
+                                player_clicks = []
+                                valid_moves = []
+                                buildingIsSelected = False
+                                possibleUnitBuys = []
+                            # else: stay in buy mode so user can try a different option
+                        else:
+                            # clicked outside the menu — cancel selection
                             square_selected = ()
                             player_clicks = []
                             valid_moves = []
                             buildingIsSelected = False
+                            possibleUnitBuys = []
 
             # --------------------------------------------------------
             elif e.type == py.KEYDOWN:
@@ -270,8 +301,10 @@ def main():
                     player_clicks = []
                     valid_moves = []
                     pieceIsSelected = False
+                    buildingIsSelected = False
                     continuePostmove = False
                     currentAttackableEnemies = []
+                    possibleUnitBuys = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
                     game_state.runStartOfTurn()
@@ -335,20 +368,25 @@ def reset_side_menu(screen):
 
 def draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys):
     reset_bottom_menu(screen)
-    
-    if square_selected != () and len(possibleUnitBuys) > 0:
-        if game_state.get_terrain(square_selected[0], square_selected[1]).isBuilding() and game_state.is_current_players_building(game_state.get_terrain(square_selected[0], square_selected[1])):
-            font = py.font.SysFont("Helvitca", 32, True, False)
-            buildUnitText = font.render("Select Unit To Buy", False, py.Color("Black"))
-            text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT)
-            screen.blit(buildUnitText, text_location)
-            
-            ind = 1
-            for unitName in possibleUnitBuys:
-                buildUnitText = font.render(unitName, False, py.Color("Black"))
-                text_location = py.Rect(0, 0, WIDTH / 2, HEIGHT / 2).move(0, HEIGHT + ind * buildUnitText.get_height())
-                screen.blit(buildUnitText, text_location)
-                ind += 1
+
+    if square_selected == () or len(possibleUnitBuys) == 0:
+        return
+    terrain = game_state.get_terrain(square_selected[0], square_selected[1])
+    if terrain is None or not terrain.isBuilding() or not game_state.is_current_players_building(terrain):
+        return
+
+    font = py.font.SysFont("helvetica", 24, True, False)
+    title = font.render("Select Unit To Buy", False, py.Color("Black"))
+    screen.blit(title, (4, HEIGHT + 4))
+
+    currentPlayer = game_state.whose_turn_string()
+    for i, unitName in enumerate(possibleUnitBuys):
+        cost = groundUnitCosts.get(unitName, 0)
+        affordable = game_state.canAfford(currentPlayer, unitName)
+        color = py.Color("Black") if affordable else py.Color(120, 120, 120)
+        label = font.render(unitName + "  -  " + str(cost), False, color)
+        y = HEIGHT + BOTTOM_MENU_TITLE_HEIGHT + i * BOTTOM_MENU_ROW_HEIGHT
+        screen.blit(label, (4, y))
 
 def reset_bottom_menu(screen):
     s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))

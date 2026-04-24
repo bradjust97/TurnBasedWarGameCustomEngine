@@ -7,10 +7,19 @@
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
-from enums import DIMENSION, BuildingEnums, FundsEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
+from enums import ArcherEnums, DIMENSION, BuildingEnums, FootmanEnums, FundsEnums, Player, PostmoveOptionsEnums, SquareBoard, TerrainEnums
 from startingBoards.advancedWarsChess import advancedWarsChess
 from terrain.Building import Building
 from unitCosts import groundUnitCosts
+from units.Archer import Archer
+from units.Footman import Footman
+
+
+BUYABLE_UNIT_NAMES = [FootmanEnums.NAME, ArcherEnums.NAME]
+UNIT_FACTORIES = {
+    FootmanEnums.NAME: Footman,
+    ArcherEnums.NAME: Archer,
+}
 
 '''
 r \ c     0           1           2           3           4           5           6           7 
@@ -287,8 +296,16 @@ class game_state:
     
     def runStartOfTurn(self):
         currentPlayer = self.whose_turn_string()
+        self.runStartOfTurnBuildings()
         self.runStartOfTurnHeal(currentPlayer)
         self.runStartOfTurnFunds(currentPlayer)
+
+    def runStartOfTurnBuildings(self):
+        for r in range(DIMENSION):
+            for c in range(DIMENSION):
+                terrain = self.get_terrain(r, c)
+                if terrain.isBuilding():
+                    terrain.resetTurnState()
     
     def runStartOfTurnHeal(self, currentPlayer):
         for r in range(DIMENSION):
@@ -319,13 +336,43 @@ class game_state:
         self.playerFunds[currentPlayer] += (count * FundsEnums.IncomePerBuilding)
     
     def getPossibleBuildGroundUnitsOfCurrentPlayer(self):
+        return list(BUYABLE_UNIT_NAMES)
+
+    def canAfford(self, player, unitName):
+        cost = groundUnitCosts.get(unitName)
+        return cost is not None and self.getFundsForPlayer(player) >= cost
+
+    def buyUnit(self, unitName, row, col):
+        if unitName not in UNIT_FACTORIES:
+            print("Unit " + str(unitName) + " is not buyable")
+            return False
+        terrain = self.get_terrain(row, col)
+        if terrain is None or not terrain.isBuilding():
+            print("No building at that square")
+            return False
         currentPlayer = self.whose_turn_string()
-        totalFunds = self.getFundsForPlayer(currentPlayer)
-        possibleBuildGroundUnits = []
-        for unitName, unitCost in groundUnitCosts.items():
-            if unitCost <= totalFunds:
-                possibleBuildGroundUnits.append(unitName)
-        return possibleBuildGroundUnits
+        if terrain.getOwningPlayer() != currentPlayer:
+            print("Building is not owned by current player")
+            return False
+        if terrain.producedThisTurn:
+            print("Building already produced this turn")
+            return False
+        if not self.is_empty(row, col):
+            print("Building is occupied, cannot spawn unit")
+            return False
+        cost = groundUnitCosts[unitName]
+        if self.playerFunds[currentPlayer] < cost:
+            print("Cannot afford " + unitName)
+            return False
+
+        self.playerFunds[currentPlayer] -= cost
+        newUnit = UNIT_FACTORIES[unitName](row, col, currentPlayer)
+        self.board[row][col] = newUnit
+        self.incrPieces(currentPlayer)
+        self.piece_moved(newUnit)
+        terrain.producedThisTurn = True
+        print("Bought " + unitName + " at (" + str(row) + "," + str(col) + ")")
+        return True
 
 # TODO: use this later to track moves and have undo or something
 # class chess_move():
