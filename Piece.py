@@ -131,7 +131,7 @@ class Piece:
         return self.health <= 0
 
     def isAlive(self):
-        return not self.isDead
+        return not self.isDead()
 
 
 

@@ -143,8 +143,8 @@ def main():
     # screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + (SIDEMENUHEIGHT - HEIGHT)))
     screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + BOTTOMMENUHEIGHT))
     clock = py.time.Clock()
-    game_state = chess_engine.game_state()
     load_images()
+    game_state = chess_engine.game_state()
     running = True
     square_selected = ()  # keeps track of the last selected square
     player_clicks = []  # keeps track of player clicks (two tuples)
@@ -156,8 +156,6 @@ def main():
     currentAttackableEnemies = []
     godmode = False
     possibleUnitBuys = []
-
-    game_state = chess_engine.game_state()
 
     while running:
         for e in py.event.get():

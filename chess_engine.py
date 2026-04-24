@@ -4,7 +4,6 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
-import imp
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
@@ -65,13 +64,10 @@ class game_state:
 
         # if they are the same row, then columns need to be adjacent
         if r1 == r2:
-            if abs(c1 - c2) == 1:
-                return True
-        elif c1 == c2:
-            if abs(r1 - r2) == 1:
-                return True
-        else:
-            return False
+            return abs(c1 - c2) == 1
+        if c1 == c2:
+            return abs(r1 - r2) == 1
+        return False
     
     def get_terrain(self, row, col):
         # return a terrain given a [x,y]
