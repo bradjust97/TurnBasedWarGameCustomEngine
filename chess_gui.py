@@ -402,27 +402,25 @@ def reset_bottom_menu(screen):
     screen.blit(s, (0, HEIGHT))
 
 def draw_unit_healths(screen, game_state):
+    cellSize = SquareBoard.WIDTH / SquareBoard.DIMENSIONS
+    boxSize = 14
+    font = py.font.SysFont("Helvitca", 16, True, False)
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             piece = game_state.get_piece(r, c)
             if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
                 hp = piece.getHealth()
-                if  hp < 91:
-                    # 512 is the width and height and scale it based on board BITCH
-                    centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
-                    centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
-
-                    # This is a shitshow but allow me to explain my logic. W / D signifies the amount of pixels a grid space takes up
-                    # So take that and multiply it by the row we are looking at. The +1 is because we are indexed at 0. The next W/2D 
-                    # is because we want the top left of the image to be in the center of the grid space. The - 1 puts us at exactly the center 
-                    # because 0 index. Lastly below we have col row because the x y is swapped due to error. Ideally we should change everything
-                    # to be consistent but for now this is what it is
-                    pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
-                    font = py.font.SysFont("Helvitca", 32, True, False)
-                    hp = hp / 10
-                    hpText = str(math.ceil(hp))
-                    text_object = font.render(hpText, True, py.Color("Red")) 
-                    screen.blit(text_object, pixelLocation)
+                if hp < 91:
+                    boxX = cellSize * c
+                    boxY = cellSize * (r + 1) - boxSize
+                    bg = py.Surface((boxSize, boxSize))
+                    bg.fill(py.Color("white"))
+                    screen.blit(bg, (boxX, boxY))
+                    py.draw.rect(screen, py.Color("black"), (boxX, boxY, boxSize, boxSize), 1)
+                    hpText = str(math.ceil(hp / 10))
+                    text_object = font.render(hpText, True, py.Color("Red"))
+                    text_rect = text_object.get_rect(center=(boxX + boxSize / 2, boxY + boxSize / 2))
+                    screen.blit(text_object, text_rect)
 
 def draw_building_caps(screen, game_state: chess_engine.game_state):
     for r in range(DIMENSION):
