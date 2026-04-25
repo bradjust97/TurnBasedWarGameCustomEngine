@@ -23,4 +23,5 @@ class GroundUnit(Piece):
             self.get_row_number(),
             self.get_col_number(),
             game_state,
+            getattr(self.enums, 'MOVEMENT_MODIFIER', None),
         )

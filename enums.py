@@ -47,10 +47,12 @@ class CatapultEnums:
 class FootmanEnums:
     MOVEMENT = 3
     NAME = 'footman'
+    MOVEMENT_MODIFIER = 'foot'
 
 class ArcherEnums:
     MOVEMENT = 2
     NAME = 'archer'
+    MOVEMENT_MODIFIER = 'boot'
 
 class WagonerEnums:
     MOVEMENT = 5
