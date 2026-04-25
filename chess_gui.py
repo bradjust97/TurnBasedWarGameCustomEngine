@@ -383,10 +383,17 @@ def draw_bottom_menu(screen, game_state, square_selected, possibleUnitBuys):
     for i, unitName in enumerate(possibleUnitBuys):
         cost = groundUnitCosts.get(unitName, 0)
         affordable = game_state.canAfford(currentPlayer, unitName)
-        color = py.Color("Black") if affordable else py.Color(120, 120, 120)
-        label = font.render(unitName + "  -  " + str(cost), False, color)
+        text_color = py.Color("Black") if affordable else py.Color(120, 120, 120)
         y = HEIGHT + BOTTOM_MENU_TITLE_HEIGHT + i * BOTTOM_MENU_ROW_HEIGHT
-        screen.blit(label, (4, y))
+
+        sprite_key = currentPlayer + "_" + unitName
+        sprite = IMAGES.get(sprite_key)
+        if sprite is not None:
+            screen.blit(sprite, (4, y))
+
+        label = font.render(unitName + "  -  " + str(cost), False, text_color)
+        text_y = y + (SQ_SIZE - label.get_height()) // 2
+        screen.blit(label, (4 + SQ_SIZE + 8, text_y))
 
 def reset_bottom_menu(screen):
     s = py.Surface((BottomMenu.WIDTH, BottomMenu.HEIGHT))
