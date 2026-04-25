@@ -4,6 +4,7 @@
 #
 # Note: move log class inspired by Eddie Sharick
 #
+import math
 from typing import Type
 from Piece import Piece
 from combat_engine import get_pieces_within_range
@@ -297,8 +298,8 @@ class game_state:
     def runStartOfTurn(self):
         currentPlayer = self.whose_turn_string()
         self.runStartOfTurnBuildings()
-        self.runStartOfTurnHeal(currentPlayer)
         self.runStartOfTurnFunds(currentPlayer)
+        self.runStartOfTurnHeal(currentPlayer)
 
     def runStartOfTurnBuildings(self):
         for r in range(DIMENSION):
@@ -306,17 +307,38 @@ class game_state:
                 terrain = self.get_terrain(r, c)
                 if terrain.isBuilding():
                     terrain.resetTurnState()
-    
+
     def runStartOfTurnHeal(self, currentPlayer):
+        # Heal each friendly unit standing on an owned building, paying
+        # 10% of unit cost per HP healed (max 2 HP, capped at full health).
+        # Iterate north-to-south, then west-to-east, so northern/western
+        # units get priority when funds run short.
         for r in range(DIMENSION):
             for c in range(DIMENSION):
                 terrain = self.get_terrain(r, c)
-                if terrain.isBuilding():
-                    if terrain.getOwningPlayer() == currentPlayer:
-                        piece = self.get_piece(r, c)
-                        if piece is not None and piece != Player.EMPTY and piece != Player.WALL:
-                            if piece.get_player() == currentPlayer:
-                                piece.gainHealth(20)
+                if not terrain.isBuilding():
+                    continue
+                if terrain.getOwningPlayer() != currentPlayer:
+                    continue
+                piece = self.get_piece(r, c)
+                if piece is None or piece == Player.EMPTY or piece == Player.WALL:
+                    continue
+                if piece.get_player() != currentPlayer:
+                    continue
+                unitCost = groundUnitCosts.get(piece.get_name())
+                if unitCost is None:
+                    continue
+                missingHp = 10 - math.ceil(piece.getHealth() / 10)
+                if missingHp <= 0:
+                    continue
+                costPerHp = unitCost // 10
+                if costPerHp <= 0:
+                    continue
+                affordableHp = min(2, missingHp, self.playerFunds[currentPlayer] // costPerHp)
+                if affordableHp <= 0:
+                    continue
+                piece.gainHealth(affordableHp * 10)
+                self.playerFunds[currentPlayer] -= affordableHp * costPerHp
 
     def getPlayerBuildingCount(self, player):
         count = 0
