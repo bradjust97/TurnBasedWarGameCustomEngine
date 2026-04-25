@@ -1,6 +1,7 @@
 import math
+import random
 
-from enums import PostmoveOptionsEnums
+from enums import LuckEnums, PostmoveOptionsEnums
 from postmoveOptions import postmoveOptions
 from combatModifiers import modifierDict
 
@@ -63,12 +64,22 @@ class Unit:
     def get_valid_piece_moves(self, board):
         pass
 
-    def standard_attack(self, target, terrainDefense=0):
+    def attack_damage(self, target, terrainDefense, luck):
+        # AW-style: luck (0..LuckEnums.MAX) is added to the base matchup
+        # damage, then the sum is scaled by attacker HP and defender
+        # terrain. So weak units can't suddenly do +9% damage.
         attackerHP = self.getHealth() / 10
         attackerModifier = modifierDict[self.get_name()][target.get_name()]
         defenseValue = (200 - 100 - terrainDefense * target.getHealth() / 10) / 100
-        hpLoss = (attackerHP / 10) * attackerModifier * defenseValue
-        target.loseHealth(hpLoss)
+        return (attackerHP / 10) * (attackerModifier + luck) * defenseValue
+
+    def attack_damage_range(self, target, terrainDefense):
+        return (self.attack_damage(target, terrainDefense, LuckEnums.MIN),
+                self.attack_damage(target, terrainDefense, LuckEnums.MAX))
+
+    def standard_attack(self, target, terrainDefense=0):
+        luck = random.randint(LuckEnums.MIN, LuckEnums.MAX)
+        target.loseHealth(self.attack_damage(target, terrainDefense, luck))
         return target.isDead()
 
     def getPostmoveActions(self):

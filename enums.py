@@ -127,6 +127,10 @@ class TerrainEnums:
 class FundsEnums:
     IncomePerBuilding = 1000
 
+class LuckEnums:
+    MIN = 0
+    MAX = 9
+
 
 """Variables"""
 WIDTH = SquareBoard.WIDTH  # width and height of the board

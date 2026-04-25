@@ -32,13 +32,7 @@ def load_images():
     for tName in TerrainEnums.TYPES:
         TERRAINIMAGES[tName] = py.transform.scale(py.image.load("images/terrain/" + tName + ".png"), (SQ_SIZE, SQ_SIZE))
 
-def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys):
-    ''' Draw the complete board with pieces
-
-    Keyword arguments:
-        :param screen       -- the pygame screen
-        :param game_state   -- the state of the current game
-    '''
+def draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys, currentAttacker=None):
     draw_squares(screen)
     draw_walls(screen, game_state)
     draw_terrain(screen, game_state)
@@ -53,6 +47,8 @@ def draw_game_state(screen, game_state, valid_moves, square_selected, currentAtt
     if square_selected != ():
         yellow_selected(screen, square_selected)
     redden_squares(screen, currentAttackableEnemies)
+    if currentAttacker is not None:
+        draw_attack_damage_previews(screen, game_state, currentAttacker, currentAttackableEnemies)
 
 def draw_walls(screen, game_state):
     for r in range(DIMENSION):
@@ -148,6 +144,20 @@ def redden_squares(screen, pieces):
         screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
 
 
+def draw_attack_damage_previews(screen, game_state, attacker, attackable_enemies):
+    font = py.font.SysFont("Helvitca", 14, True, False)
+    for enemy in attackable_enemies:
+        r = enemy.get_row_number()
+        c = enemy.get_col_number()
+        terrainDefense = game_state.get_terrain(r, c).getDefenseBonus()
+        minDmg, maxDmg = attacker.attack_damage_range(enemy, terrainDefense)
+        minDmg = max(0, math.floor(minDmg))
+        maxDmg = max(0, math.floor(maxDmg))
+        text = str(minDmg) if minDmg == maxDmg else str(minDmg) + "-" + str(maxDmg)
+        text_object = font.render(text, True, py.Color("yellow"))
+        screen.blit(text_object, (c * SQ_SIZE + 1, r * SQ_SIZE + 1))
+
+
 def main():
     py.init()
     # screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + (SIDEMENUHEIGHT - HEIGHT)))
@@ -164,6 +174,7 @@ def main():
     buildingIsSelected = False
     continuePostmove = False
     currentAttackableEnemies = []
+    currentAttacker = None
     godmode = False
     possibleUnitBuys = []
 
@@ -250,6 +261,7 @@ def main():
                                 pieceIsSelected = False
                                 continuePostmove = False
                                 currentAttackableEnemies = []
+                                currentAttacker = None
                             else:
                                 print("please select valid postmove attack")
                         else:
@@ -268,6 +280,7 @@ def main():
                             # setup gui for user input post move
                             else:
                                 currentAttackableEnemies = movedPiece.getPostmoveOptions().getAttackableEnemies()
+                                currentAttacker = movedPiece
                     elif buildingIsSelected:
                         unitClicked = get_bottom_menu_unit_at(x, y, possibleUnitBuys)
                         if unitClicked is not None:
@@ -299,6 +312,7 @@ def main():
                     buildingIsSelected = False
                     continuePostmove = False
                     currentAttackableEnemies = []
+                    currentAttacker = None
                     possibleUnitBuys = []
                     game_state.end_turn()
                     game_state.reset_moved_pieces()
@@ -319,7 +333,7 @@ def main():
         # if pieceIsSelected:
         #     location = py.mouse.get_pos()
         #     square_selected = (row, col)
-        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys)
+        draw_game_state(screen, game_state, valid_moves, square_selected, currentAttackableEnemies, possibleUnitBuys, currentAttacker)
 
         (endgame, deadPlayer) = game_state.isGameEnd()
         if endgame:
