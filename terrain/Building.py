@@ -1,6 +1,6 @@
 
 
-from Piece import Piece
+from Unit import Unit
 from enums import ArcherEnums, BuildingEnums, FootmanEnums
 from terrain.Terrain import Terrain
 
@@ -35,7 +35,7 @@ class Building(Terrain):
     def decrCapturePoints(self, points):
         self.currentCapturePoints -= points
     
-    def canGetCapturedBy(self, piece:Piece):
+    def canGetCapturedBy(self, piece:Unit):
         if piece.get_name() == FootmanEnums.NAME or piece.get_name() == ArcherEnums.NAME:
             return True
         else:
@@ -44,7 +44,7 @@ class Building(Terrain):
     def getFullBuildingName(self):
         return self.getOwningPlayer() + '_' + self.getTerrainName()
 
-    def capture(self, piece:Piece):
+    def capture(self, piece:Unit):
         # Returns true if piece successfully captured the building
         if(self.canGetCapturedBy(piece)):
             print("Decrd building cap points by " + str(piece.getHP()))

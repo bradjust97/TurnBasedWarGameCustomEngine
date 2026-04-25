@@ -1,14 +1,14 @@
-import enum
 import math
 from pprint import pprint
-from units.Footman import Footman
-from Piece import Piece
-import chess_engine
-import pygame as py
-from combat_engine import get_pieces_within_range
 
+import pygame as py
+
+import game_engine
+from Unit import Unit
+from combat_engine import get_pieces_within_range
 from enums import BOTTOMMENUHEIGHT, DIMENSION, HEIGHT, IMAGES, MAX_FPS, SIDEMENUHEIGHT, SIDEMENUWIDTH, SQ_SIZE, TERRAINIMAGES, WIDTH, BottomMenu, BuildingEnums, Player, PostmoveOptionsEnums, SideMenu, SquareBoard, TerrainEnums
 from unitCosts import groundUnitCosts
+from units.Footman import Footman
 
 colors = [py.Color("white"), py.Color("gray"), py.Color("black")]
 
@@ -27,11 +27,6 @@ def get_bottom_menu_unit_at(x, y, possibleUnitBuys):
     return None
 
 def load_images():
-    '''
-    Load images for the pieces
-    '''
-    for p in Player.PIECES:
-        IMAGES[p] = py.transform.scale(py.image.load("images/" + p + ".png"), (SQ_SIZE, SQ_SIZE))
     for u in Player.UNITS:
         IMAGES[u] = py.transform.scale(py.image.load("images/advancedWars/" + u + ".png"), (SQ_SIZE, SQ_SIZE))
     for tName in TerrainEnums.TYPES:
@@ -159,7 +154,7 @@ def main():
     screen = py.display.set_mode((WIDTH + SIDEMENUWIDTH, HEIGHT + BOTTOMMENUHEIGHT))
     clock = py.time.Clock()
     load_images()
-    game_state = chess_engine.game_state()
+    game_state = game_engine.game_state()
     running = True
     square_selected = ()  # keeps track of the last selected square
     player_clicks = []  # keeps track of player clicks (two tuples)
@@ -422,25 +417,19 @@ def draw_unit_healths(screen, game_state):
                     text_rect = text_object.get_rect(center=(boxX + boxSize / 2, boxY + boxSize / 2))
                     screen.blit(text_object, text_rect)
 
-def draw_building_caps(screen, game_state: chess_engine.game_state):
+def draw_building_caps(screen, game_state: game_engine.game_state):
+    cellSize = SquareBoard.WIDTH / SquareBoard.DIMENSIONS
+    font = py.font.SysFont("Helvitca", 32, True, False)
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             terrain = game_state.get_terrain(r, c)
-            if terrain.isBuilding():
-                if terrain.getCapturePoints() < BuildingEnums.TOTALCAPTUREPOINTS:
-                    # 512 is the width and height and scale it based on board BITCH
-                    centerOfGridLocationByPixelRow = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (r+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS))- 1 # take out 2 for col offset bc we want top left of pic to be in top middle 
-                    centerOfGridLocationByPixelCol = ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) * (c+1)) - ((SquareBoard.WIDTH / SquareBoard.DIMENSIONS) / 2) - 1
-
-                    # This is a shitshow but allow me to explain my logic. W / D signifies the amount of pixels a grid space takes up
-                    # So take that and multiply it by the row we are looking at. The +1 is because we are indexed at 0. The next W/2D 
-                    # is because we want the top left of the image to be in the center of the grid space. The - 1 puts us at exactly the center 
-                    # because 0 index. Lastly below we have col row because the x y is swapped due to error. Ideally we should change everything
-                    # to be consistent but for now this is what it is
-                    pixelLocation = (centerOfGridLocationByPixelCol, centerOfGridLocationByPixelRow )
-                    font = py.font.SysFont("Helvitca", 32, True, False)
-                    text_object = font.render(str(terrain.getCapturePoints()), True, py.Color("Blue")) 
-                    screen.blit(text_object, pixelLocation)
+            if not terrain.isBuilding():
+                continue
+            if terrain.getCapturePoints() >= BuildingEnums.TOTALCAPTUREPOINTS:
+                continue
+            pixelLocation = (cellSize * (c + 0.5) - 1, cellSize * r - 1)
+            text_object = font.render(str(terrain.getCapturePoints()), True, py.Color("Blue"))
+            screen.blit(text_object, pixelLocation)
 
 
 def gui_move(game_state, player_clicks):
@@ -454,7 +443,7 @@ def gui_move(game_state, player_clicks):
     print("moved piece " + movedPiece.get_name())
     return (movedPiece, movedSameSpot)
 
-def execute_selected_option(game_state: chess_engine.game_state, sourcePiece: Piece, selected_square):
+def execute_selected_option(game_state: game_engine.game_state, sourcePiece: Unit, selected_square):
     # return true if successfully executed option
     # TODO this is only for attack, need to generalize for multiple options
     canAttack = sourcePiece.getPostmoveOptions().hasAttackOption() 

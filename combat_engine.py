@@ -21,7 +21,6 @@ def get_pieces_within_range(piece, game_state):
             # when the square with new_row and new_col contains a valid piece
             if (game_state.is_valid_piece(new_row, new_col)):
                 potentialPiece = game_state.get_piece(new_row, new_col)
-                # TODO later is to make this its own method in chess engine
                 whiteTurn = game_state.whose_turn()
                 whitePiece = potentialPiece.get_player() == Player.PLAYER_1
                 # if its both a white piece and the white turn, then its friendly

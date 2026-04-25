@@ -1,8 +1,8 @@
-from Piece import Piece
+from Unit import Unit
 from movement_engine import blocked_movement_diamond
 
 
-class GroundUnit(Piece):
+class GroundUnit(Unit):
     enums = None
 
     def __init__(self, row_number, col_number, player):

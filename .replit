@@ -1,2 +1,2 @@
 language = "python3"
-run = "python3 -W ignore chess_gui.py"
+run = "python3 -W ignore game_gui.py"

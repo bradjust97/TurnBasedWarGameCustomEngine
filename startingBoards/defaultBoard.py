@@ -50,7 +50,7 @@ terrainMap[7][7] = Building(7, 7, Player.NEUTRAL)
 terrainMap[14][14] = Building(14, 14, Player.PLAYER_2)
 
 
-class advancedWarsChess:
+class defaultBoard:
     white_pieces = white_pieces
     black_pieces = black_pieces
     board = board

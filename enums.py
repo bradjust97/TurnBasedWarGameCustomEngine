@@ -4,13 +4,9 @@ class Player:
     NEUTRAL = 'neutral'
     EMPTY = -9
     WALL = -8
-    PIECES = ['white_r', 'white_n', 'white_q', 'white_k', 'white_p',
-              'black_r', 'black_n', 'black_q', 'black_k', 'black_p']
     UNITS = ['white_scoutCavalry', 'black_scoutCavalry', 'black_knight', 'white_knight',
-             'white_footman', 'black_footman', 'white_king', 'black_king', 
+             'white_footman', 'black_footman', 'white_king', 'black_king',
              'white_queen', 'black_queen', 'white_catapult', 'black_catapult', 'white_archer', 'black_archer']
-             # No images for:
-             # 'white_archer', 'black_archer', and more
 
 
 class SquareBoard: # assume square for now
